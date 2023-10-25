@@ -47,13 +47,11 @@ void Vortex::addEdge(Edge& edge)  {
     //Receive: an edge 
     //Return: void
     
-    std::cout << edge << "this is the edge" << std::endl; 
     this->edges.push_back(edge); //This add the edge to the origin vortex
 
     //This loop add the edge to the destination vortex but the destination will be the origin vortex
     for (Vortex& vortex : vortexList) {
         if (vortex.name == edge.destination->name) {
-            std::cout << vortex << edge.destination->name << "This is the vortex" << std::endl;
             Edge returnEdge(edge.distance, this);
             vortex.edges.push_back(returnEdge);
         }

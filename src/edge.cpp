@@ -11,6 +11,6 @@ Edge::Edge() {
 }
 
 std::ostream& operator<<(std::ostream& os, const Edge& edge) {
-    os << "Edge: " << edge.distance << " " << *edge.destination;
+    os << "(" << "Distance: " << edge.distance << " Destination: " << *edge.destination << ")";
     return os;
 }
