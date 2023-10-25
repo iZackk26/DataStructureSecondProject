@@ -1,8 +1,14 @@
+#include <Globals.hh>
 #include <Person.hh>
+#include <Vortex.hh>
+#include <Activity.hh>
+#include <Edge.hh>
 #include <list>
 #include <iostream>
 #include <fstream>
 #include <string>
+
+using std::string;
 
 void writeToFile(Person person, string fileName){
     //This function opens a file and append information to it in binary mode
@@ -45,16 +51,27 @@ void readFromFile(const string& filename) {
     }
 }
 
+void printGraph(){
+    for (Vortex &vortex : vortexList) {
+        std::cout << vortex << " :" << vortex.edges.size() << std::endl;
+        
+        for (Edge &edge : vortex.edges) {
+            std::cout << edge << std::endl;
+        }
+    }
+}
+
 int main(){
-    string dataFile = "Information/Data.bin";
-    string gender = "Male";
-    int age = 18;
-    string beginingRute = "San Ramon";
-    string endingRute = "Santa Clara";
-    string hobby = "Patear la redonda";
-    Person person(gender.c_str(), age, beginingRute.c_str(), endingRute.c_str(), hobby.c_str());
-    writeToFile(person, dataFile);
-    readFromFile(dataFile);
+    Vortex vortex1("Vortex1");
+    Vortex vortex2("Vortex2");
+    vortexList.push_back(vortex1);
+    vortexList.push_back(vortex2);
+
+    Edge edge(10, &vortex2);
+    
+    vortex1.addEdge(edge);
+    
+    printGraph();
 
     return 0;
 }

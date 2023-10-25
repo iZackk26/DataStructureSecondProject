@@ -10,10 +10,11 @@ using std::string;
 class Edge {
     public:
         float distance;
-        Vortex *vortex;
+        Vortex *destination;
 
         // Constructors
-        Edge(float distance, Vortex *vortex);
+        Edge(float distance, Vortex *destination);
         Edge();
-
+        
+        friend std::ostream& operator<<(std::ostream& os, const Edge& edge);
 };

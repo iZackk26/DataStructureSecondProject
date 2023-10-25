@@ -1,5 +1,5 @@
-obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Globals.hh \
- /usr/include/c++/13.2.1/list \
+obj/vortex.o: src/vortex.cpp /usr/include/stdc-predef.h \
+ include/Globals.hh /usr/include/c++/13.2.1/list \
  /usr/include/c++/13.2.1/bits/requires_hosted.h \
  /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++config.h \
  /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/os_defines.h \
@@ -133,11 +133,7 @@ obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Globals.hh \
  /usr/include/c++/13.2.1/bits/basic_ios.tcc \
  /usr/include/c++/13.2.1/bits/ostream.tcc /usr/include/c++/13.2.1/istream \
  /usr/include/c++/13.2.1/bits/istream.tcc include/Edge.hh \
- include/Activity.hh include/Person.hh /usr/include/c++/13.2.1/fstream \
- /usr/include/c++/13.2.1/bits/codecvt.h \
- /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/basic_file.h \
- /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++io.h \
- /usr/include/c++/13.2.1/bits/fstream.tcc
+ include/Activity.hh
 /usr/include/stdc-predef.h:
 include/Globals.hh:
 /usr/include/c++/13.2.1/list:
@@ -323,9 +319,3 @@ include/Vortex.hh:
 /usr/include/c++/13.2.1/bits/istream.tcc:
 include/Edge.hh:
 include/Activity.hh:
-include/Person.hh:
-/usr/include/c++/13.2.1/fstream:
-/usr/include/c++/13.2.1/bits/codecvt.h:
-/usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/basic_file.h:
-/usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++io.h:
-/usr/include/c++/13.2.1/bits/fstream.tcc:

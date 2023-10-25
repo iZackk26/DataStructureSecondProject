@@ -3,12 +3,12 @@
 
 using std::string;
 
-class Activitie {
+class Activity {
     public:
         string name;
-        Activitie *next;
+        Activity *next;
 
         // Constructors
-        Activitie(string name);
-        Activitie();
+        Activity(string name);
+        Activity();
 };
