@@ -2,16 +2,18 @@
 #include <list>
 #include <iostream>
 #include <fstream>
+#include <string>
 
+void writeToFile(Person person, string fileName){
+    //This function opens a file and append information to it in binary mode
 
-void writeToFile(Person x, string fileName){
-    std::ofstream file(fileName, std::ios::binary | std::ios::app);
+    std::ofstream file(fileName, std::ios::out | std::ios::app | std::ios::binary);
     try {
         if (!file.is_open()) {
             throw std::runtime_error("File not found");
         }
-        /* file.write(reinterpret_cast<char *>(&x), sizeof(x)); */
-        file.write((char *)&x, sizeof(x));
+
+        file.write(reinterpret_cast<char *>(&person), sizeof(person));
         file.close();
 
         if (!file.good()) {
@@ -22,31 +24,37 @@ void writeToFile(Person x, string fileName){
         }
 }
 
-void readFile(string filename){
-    std::ifstream file(filename, std::ios::out | std::ios::binary);
+void readFromFile(const string& filename) {
+    std::ifstream file(filename, std::ios::in | std::ios::binary);
     try {
-        Person p;
         if (!file) {
             throw std::runtime_error("File not found");
         }
-        file.read((char *)&p, sizeof(p));
-        file.close();
-        if (!file.good()) {
-            throw std::runtime_error("Error occurred at reading time");
-        }
-    } catch (std::runtime_error &e) {
-            std::cout << e.what() << std::endl;
-        }
-}
 
+        Person person;
+        file.read(reinterpret_cast<char *>(&person), sizeof(person));
+
+        while (!file.eof()) {
+            std::cout << person << std::endl;
+            file.read(reinterpret_cast<char *>(&person), sizeof(person));
+        }
+
+        file.close();
+    } catch (std::runtime_error &e) {
+        std::cout << e.what() << std::endl;
+    }
+}
 
 int main(){
     string dataFile = "Information/Data.bin";
-    Person p("Male",18, "San Ramon", "Santa Clara");
-    Person p2("Female", 19, "Heredia", "Alajuela");
-    /* writeToFile(p, dataFile); */
-    writeToFile(p2, dataFile);
-    readFile(dataFile);
+    string gender = "Male";
+    int age = 18;
+    string beginingRute = "San Ramon";
+    string endingRute = "Santa Clara";
+    string hobby = "Patear la redonda";
+    Person person(gender.c_str(), age, beginingRute.c_str(), endingRute.c_str(), hobby.c_str());
+    writeToFile(person, dataFile);
+    readFromFile(dataFile);
 
     return 0;
 }
