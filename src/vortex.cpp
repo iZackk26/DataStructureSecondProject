@@ -13,6 +13,7 @@ std::list<Vortex> vortexList; //Definition of the list declared in the header
 Vortex::Vortex(string name) {
     //This is the constructor
     this->name = name;
+    this->edges = std::list<Edge>();
 }
 
 Vortex::Vortex() {
@@ -55,6 +56,13 @@ void Vortex::addEdge(Edge& edge)  {
             std::cout << vortex << edge.destination->name << "This is the vortex" << std::endl;
             Edge returnEdge(edge.distance, this);
             vortex.edges.push_back(returnEdge);
+        }
+    }
+
+    //This loop udpate the list in order to storage the origin vortex
+    for (Vortex& vortex: vortexList) {
+        if (vortex.name == this->name) {
+            vortex.edges = this->edges;
             return;
         }
     }

@@ -69,8 +69,12 @@ int main(){
 
     Edge edge(10, &vortex2);
     
-    vortex1.addEdge(edge);
-    
+    for (Vortex &vortex : vortexList) {
+        if (vortex.name == "Vortex1") {
+            vortex1.addEdge(edge);
+        }
+    }
+
     printGraph();
 
     return 0;
