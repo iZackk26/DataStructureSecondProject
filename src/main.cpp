@@ -89,6 +89,11 @@ void createVortex() {
 }
 
 void deleteVortex() {
+    //This function deletes a vortex from the list of vortexes
+    //Receive: nothing
+    //Return: nothing
+
+
     string vortexName;
     Vortex* vortexToDelete = nullptr;
 
