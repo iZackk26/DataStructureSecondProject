@@ -89,25 +89,42 @@ void createVortex() {
 }
 
 void deleteVortex() {
-    //This function deletes a vortex from the list of vortexes
-    //Receive: nothing
-    //Return: nothing
-    
     string vortexName;
+    Vortex* vortexToDelete = nullptr;
 
-    std::cout << "Enter the name of the place you want to delete: ";
+    std::cout << "Enter the name of the place you want to delete (notice that this will delete all the edges related to that vortex): ";
     std::getline(std::cin, vortexName);
     
-    //Find the vortex with the name entered by the user and delete it
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == vortexName) {
-            vortexList.remove(vortex);
-            return;
+    // Find the vortex with the name entered by the user and delete it
+    auto it = vortexList.begin();
+    while (it != vortexList.end()) {
+        if (it->name == vortexName) {
+            vortexToDelete = &(*it);
+            it = vortexList.erase(it); // Elimina el vortex y actualiza el iterador
+        } else {
+            ++it;
         }
     }
+    
+    // If the vortex was not found, print an error message and return
+    if (vortexToDelete == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
 
-    std::cout << "Invalid place" << std::endl;
+    // Delete all the edges that are related to the vortex
+    for (Vortex& vortex : vortexList) {
+        auto edgeIt = vortex.edges.begin();
+        while (edgeIt != vortex.edges.end()) {
+            if (edgeIt->destination == vortexToDelete) {
+                edgeIt = vortex.edges.erase(edgeIt); // Elimina el edge y actualiza el iterador
+            } else {
+                ++edgeIt;
+            }
+        }
+    }
 }
+
 
 void modifyVortex() {
     //This function modifies a vortex from the list of vortexes

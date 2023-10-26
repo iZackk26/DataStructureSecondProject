@@ -17,4 +17,10 @@ class Edge {
         Edge();
         
         friend std::ostream& operator<<(std::ostream& os, const Edge& edge);
+
+        bool operator==(const Edge& rhs) {
+            return destination == rhs.destination;
+        }
+
+
 };
