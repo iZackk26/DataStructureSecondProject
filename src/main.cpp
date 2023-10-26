@@ -10,6 +10,16 @@
 
 using std::string;
 
+//Prototypes
+void createVortex();
+void deleteVortex();
+void modifyVortex();
+void modifyVortexName(Vortex& vortex);
+void setEdge();
+void printGraph();
+void writeToFile(Person person, string fileName);
+void readFromFile(const string& filename);
+
 void writeToFile(Person person, string fileName){
     //This function opens a file and append information to it in binary mode
 
@@ -140,8 +150,9 @@ void modifyVortex() {
     Vortex* vortexToModify = nullptr;
     string vortexName;
     std::cout << "Enter the name of the place you want to modify: ";
-    std::cin >> option;
+    std::getline(std::cin, vortexName);
 
+    //Find the vortex with the name entered by the user
     for(Vortex& vortex: vortexList){
         if(vortex.name == vortexName){
             vortexToModify = &vortex;
@@ -149,14 +160,25 @@ void modifyVortex() {
         }
     }
 
+    //If the vortex was not found, print an error message and return
     if(vortexToModify == nullptr){
         std::cout << "Invalid place" << std::endl;
         return;
     }
 
+    //Print the options to modify the vortex
+    std::cout << "What do you want to modify?" << std::endl;
+    std::cout << "1. Name" << std::endl;
+    std::cout << "2. Edges" << std::endl;
+    std::cout << "3. Activities" << std::endl;
+    std::cin >> option;
+
+    std::cin.ignore();
+
+    //Execute the option selected by the user
     switch (option) {
         case 1:
-            //Modify the name of the vortex
+            modifyVortexName(*vortexToModify);
             break;
         case 2:
             //Modify the edges of the vortex
@@ -261,7 +283,8 @@ int main(){
     setEdge();
     setEdge();
 
-    deleteVortex();
+    //deleteVortex();
+    modifyVortex();
     printGraph();
 
     return 0;
