@@ -114,13 +114,14 @@ void modifyVortex() {
     //Receive: nothing
     //Return: nothing
     
-    string option;
+    int option;
     Vortex* vortexToModify = nullptr;
+    string vortexName;
     std::cout << "Enter the name of the place you want to modify: ";
-    std::getline(std::cin, option);
+    std::cin >> option;
 
     for(Vortex& vortex: vortexList){
-        if(vortex.name == option){
+        if(vortex.name == vortexName){
             vortexToModify = &vortex;
             break;
         }
@@ -132,13 +133,13 @@ void modifyVortex() {
     }
 
     switch (option) {
-        case "1":
+        case 1:
             //Modify the name of the vortex
             break;
-        case "2":
+        case 2:
             //Modify the edges of the vortex
             break;
-        case "3":
+        case 3:
             //Modify the activities of the vortex
         default:
             std::cout << "Invalid option" << std::endl;
@@ -166,6 +167,7 @@ void modifyVortexName(Vortex& vortex) {
             return;
         }
     }
+}
 
 void setEdge() {
     //This function creates an edge between two vortexes
@@ -237,7 +239,7 @@ int main(){
     setEdge();
     setEdge();
 
-
+    deleteVortex();
     printGraph();
 
     return 0;

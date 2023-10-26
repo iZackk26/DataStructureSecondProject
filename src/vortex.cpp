@@ -14,6 +14,7 @@ Vortex::Vortex(string name) {
     //This is the constructor
     this->name = name;
     this->edges = std::list<Edge>();
+    this->activities = std::list<Activity*>();
 }
 
 Vortex::Vortex() {
