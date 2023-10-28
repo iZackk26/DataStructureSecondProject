@@ -3,7 +3,6 @@
 #include <string>
 #include <list>
 #include <Edge.hh>
-#include <Activity.hh>
 
 class Edge;
 
@@ -12,7 +11,7 @@ using std::string;
 class Vortex {
     public:
         string name;
-        std::list<Activity*> activities;
+        std::list<string*> activities;
         std::list<Edge> edges;
         
         // Constructors
@@ -20,8 +19,8 @@ class Vortex {
         Vortex();
         
         // Methods
-        void addActivity(Activity* activity);
-        void removeActivity(Activity* activity);
+        void addActivity(string activity);
+        void removeActivity(string activity);
 
         void addEdge(Edge& edge);
         void removeEdge(Edge& edge);

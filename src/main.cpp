@@ -1,7 +1,6 @@
 #include <Globals.hh>
 #include <Person.hh>
 #include <Vortex.hh>
-#include <Activity.hh>
 #include <Edge.hh>
 #include <list>
 #include <iostream>
@@ -22,6 +21,8 @@ void readFromFile(const string& filename);
 
 void writeToFile(Person person, string fileName){
     //This function opens a file and append information to it in binary mode
+    //Receives: a person object and the file name
+    //Returns: nothing
 
     std::ofstream file(fileName, std::ios::out | std::ios::app | std::ios::binary);
     try {
@@ -41,6 +42,10 @@ void writeToFile(Person person, string fileName){
 }
 
 void readFromFile(const string& filename) {
+    //This function opens a file and reads the information in binary mode 
+    //Receives: the file name 
+    //Returns: nothing
+
     std::ifstream file(filename, std::ios::in | std::ios::binary);
     try {
         if (!file) {
@@ -62,18 +67,35 @@ void readFromFile(const string& filename) {
 }
 
 void printGraph(){
+    //This function prints the entire graph 
+    //Receive: nothing
+    //Return: nothing
+    
     for (Vortex &vortex : vortexList) {
         std::cout << vortex << ", edges: ";
         
         if (vortex.edges.empty()) {
             std::cout << "No edges yet" << std::endl;
+        } else {
+            for (Edge &edge : vortex.edges) {
+                std::cout << edge << " ";
+            }
+        }
+
+        std::cout << std::endl;
+        std::cout << "Activities of " << vortex.name << ": ";
+
+        if (vortex.activities.empty()) {
+            std::cout << "No activities yet" << std::endl;
+            std::cout << std::endl;
             continue;
         }
 
-        for (Edge &edge : vortex.edges) {
-            std::cout << edge << " ";
+        for (string *activity : vortex.activities) {
+            std::cout << *activity << " ";
         }
-        std::cout << std::endl;
+
+        std::cout << "\n" << std::endl;
     }
 }
 
@@ -279,12 +301,15 @@ int main(){
     vortexList.push_back(vortex1);
     vortexList.push_back(vortex2);
     vortexList.push_back(vortex3);
+    activityList.push_back("Comer");
 
     setEdge();
     setEdge();
+
+    vortex1.addActivity("Comer");
 
     //deleteVortex();
-    modifyVortex();
+    //modifyVortex();
     printGraph();
 
     return 0;

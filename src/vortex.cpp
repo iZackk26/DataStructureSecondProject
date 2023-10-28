@@ -3,18 +3,19 @@
 #include <Edge.hh>
 #include <list>
 #include <string>
-#include <Activity.hh>
 #include <iostream>
+#include <algorithm>
 
 using namespace std;
 
 std::list<Vortex> vortexList; //Definition of the list declared in the header
+std::list<string> activityList; //Definition of the list declared in the header
 
 Vortex::Vortex(string name) {
     //This is the constructor
     this->name = name;
     this->edges = std::list<Edge>();
-    this->activities = std::list<Activity*>();
+    this->activities = std::list<string*>();
 }
 
 Vortex::Vortex() {
@@ -29,18 +30,42 @@ std::ostream& operator<<(ostream& os, const Vortex& vortex) {
     return os;
 }
 
-void Vortex::addActivity(Activity* activity) {
-    //This method receive an activity and add it to the vortexList
-    //Receive: pointer to an Activity
+void Vortex::addActivity(string activity) {
+    //This method receive an activity, checks if it is in the main activities list and add it to the vortex activities list
+    //Receive: the name of the activity
     //Return: void
-    this->activities.push_back(activity);
+    
+    std::list<string>::iterator it = std::find(activityList.begin(), activityList.end(), activity); //This search the activity in the list and give the pointer
+    
+    if (it != activityList.end()) {
+        //This loop checks if the activity is already in the vortex 
+        for (string* activity : this->activities) {
+            if (*activity == *it) {
+                std::cout << "Activity " << activity << " is already in " << this->name << std::endl;
+                return;
+            }
+        }
+        
+        this->activities.push_back(&(*it)); //This add the activity to the vortexList
+
+        //This loop udpate the list 
+        for (Vortex& vortex: vortexList) {
+            if (vortex.name == this->name) {
+                vortex.activities = this->activities;
+                std::cout << "Activity " << activity << " added to " << vortex.name << std::endl;
+                return;
+            }
+        }
+    }
+
+    std::cout << "Activity " << activity << " not found" << std::endl;
+
 }
 
-void Vortex::removeActivity(Activity* activity) {
+void Vortex::removeActivity(string activity) {
     //This method receive an activity and remove it from the vortexList
     //Receive: pointer to an activity
     //Return: void
-    this->activities.remove(activity);
 }
 
 void Vortex::addEdge(Edge& edge)  {

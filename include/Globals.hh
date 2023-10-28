@@ -4,10 +4,11 @@
 
 #include <list>
 #include <Vortex.hh>
-#include <Activity.hh>
 #include <Edge.hh>
+#include <string>
+
 
 extern std::list<Vortex> vortexList;
-extern std::list<Activity*> activityList;
+extern std::list<string> activityList;
 
 #endif

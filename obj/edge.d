@@ -130,8 +130,7 @@ obj/edge.o: src/edge.cpp /usr/include/stdc-predef.h include/Edge.hh \
  /usr/include/c++/13.2.1/bits/stl_list.h \
  /usr/include/c++/13.2.1/bits/allocated_ptr.h \
  /usr/include/c++/13.2.1/ext/aligned_buffer.h \
- /usr/include/c++/13.2.1/bits/list.tcc include/Activity.hh \
- include/Globals.hh
+ /usr/include/c++/13.2.1/bits/list.tcc include/Globals.hh
 /usr/include/stdc-predef.h:
 include/Edge.hh:
 include/Vortex.hh:
@@ -315,5 +314,4 @@ include/Vortex.hh:
 /usr/include/c++/13.2.1/bits/allocated_ptr.h:
 /usr/include/c++/13.2.1/ext/aligned_buffer.h:
 /usr/include/c++/13.2.1/bits/list.tcc:
-include/Activity.hh:
 include/Globals.hh:
