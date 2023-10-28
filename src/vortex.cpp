@@ -66,6 +66,31 @@ void Vortex::removeActivity(string activity) {
     //This method receive an activity and remove it from the vortexList
     //Receive: pointer to an activity
     //Return: void
+
+    std::list<string>::iterator it = std::find(activityList.begin(), activityList.end(), activity); //This search the activity in the list and give the pointer
+    
+    if (it != activityList.end()) {
+        for (string* activity : this->activities) {
+            if (*activity == *it) {
+                this->activities.remove(activity); //This remove the activity from the vortex activity list
+                std::cout << "Activity " << *activity << " removed from " << this->name << std::endl;
+                break;
+            }
+        }
+
+        //This loop updates the vortex 
+        for (Vortex& vortex: vortexList) {
+            if (vortex.name == this->name) {
+                vortex.activities = this->activities;
+                return;
+            }
+        }
+
+        std::cout << "The place does not have the activity " << activity << std::endl;
+    }
+
+    std::cout << "Activity " << activity << " not found" << std::endl;
+
 }
 
 void Vortex::addEdge(Edge& edge)  {

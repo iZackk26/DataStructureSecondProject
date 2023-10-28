@@ -82,8 +82,7 @@ void printGraph(){
             }
         }
 
-        std::cout << std::endl;
-        std::cout << "Activities of " << vortex.name << ": ";
+        std::cout << vortex.name << " activities: ";
 
         if (vortex.activities.empty()) {
             std::cout << "No activities yet" << std::endl;
@@ -303,13 +302,16 @@ int main(){
     vortexList.push_back(vortex3);
     activityList.push_back("Comer");
 
-    setEdge();
-    setEdge();
+    //setEdge();
+    //setEdge();
 
     vortex1.addActivity("Comer");
 
     //deleteVortex();
     //modifyVortex();
+    printGraph();
+
+    vortex1.removeActivity("Comer");
     printGraph();
 
     return 0;
