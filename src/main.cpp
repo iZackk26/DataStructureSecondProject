@@ -338,6 +338,7 @@ int main(){
     string dataFile = "Information/Data.bin";
     Person p("Male",18, "San Ramon", "Santa Clara", "Shopping");
     Person p2("Female", 19, "Heredia", "Alajuela", "Moovie");
+    Person *p1 = new Person();
     std::vector<string> options = {"Create Person", "Read Person", "Update Person", "Delete Person"};
     createMenu(options);
     /* writeToFile(p, dataFile); */
