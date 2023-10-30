@@ -3,6 +3,7 @@
 #include <Vortex.hh>
 #include <Edge.hh>
 #include <list>
+#include <vector>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -186,7 +187,6 @@ void modifyVortex() {
         std::cout << "Invalid place" << std::endl;
         return;
     }
-
     //Print the options to modify the vortex
     std::cout << "What do you want to modify?" << std::endl;
     std::cout << "1. Name" << std::endl;
@@ -210,6 +210,19 @@ void modifyVortex() {
             std::cout << "Invalid option" << std::endl;
             break;
     }
+    /* switch (option) { */
+    /*     case "1": */
+    /*         //Modify the name of the vortex */
+    /*         break; */
+    /*     case "2": */
+    /*         //Modify the edges of the vortex */
+    /*         break; */
+    /*     case "3": */
+    /*         //Modify the activities of the vortex */
+    /*     default: */
+    /*         std::cout << "Invalid option" << std::endl; */
+    /*         break; */
+    /* } */
 }
 
 void modifyVortexName(Vortex& vortex) {
@@ -292,6 +305,15 @@ void setEdge() {
     std::cout << "Invalid destination" << std::endl;
 }
 
+void createMenu(const std::vector<string> &options){
+    int c = 1;
+    for(const string &option : options){
+        std::cout << c << ". " << option << std::endl;
+        c++;
+    }
+    std::cout << "0. Exit" << std::endl;
+}
+
 
 int main(){
     Vortex vortex1("San Ramon");
@@ -313,6 +335,13 @@ int main(){
 
     vortex1.removeActivity("Comer");
     printGraph();
+    string dataFile = "Information/Data.bin";
+    Person p("Male",18, "San Ramon", "Santa Clara", "Shopping");
+    Person p2("Female", 19, "Heredia", "Alajuela", "Moovie");
+    std::vector<string> options = {"Create Person", "Read Person", "Update Person", "Delete Person"};
+    createMenu(options);
+    /* writeToFile(p, dataFile); */
+    /* writeToFile(p2, dataFile); */
 
     return 0;
 }
