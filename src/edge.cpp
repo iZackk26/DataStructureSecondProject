@@ -1,6 +1,5 @@
 #include <Edge.hh>
 #include <Vortex.hh>
-#include <Globals.hh>
 
 Edge::Edge(float distance, Vortex *destination) {
     this->distance = distance;

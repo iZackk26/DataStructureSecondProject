@@ -1,4 +1,3 @@
-#include <Globals.hh>
 #include <Vortex.hh>
 #include <Edge.hh>
 #include <list>
@@ -8,8 +7,8 @@
 
 using namespace std;
 
-std::list<Vortex> vortexList; //Definition of the list declared in the header
-std::list<string> activityList; //Definition of the list declared in the header
+static std::list<Vortex> vortexList; //Definition of the list declared in the header
+static std::list<string> activityList; //Definition of the list declared in the header
 
 Vortex::Vortex(string name) {
     //This is the constructor
