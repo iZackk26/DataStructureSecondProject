@@ -22,12 +22,8 @@ class Vortex {
         void addActivity(string activity);
         void removeActivity(string activity);
 
-        void addEdge(Edge& edge);
-        void removeEdge(Edge& edge);
-
         friend std::ostream& operator<<(std::ostream& os, const Vortex& vortex);
-
         bool operator==(const Vortex& rhs) const {
-        return name == rhs.name;
+            return name == rhs.name;
         }
 };

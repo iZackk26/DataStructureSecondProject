@@ -1,4 +1,3 @@
-#include <Globals.hh>
 #include <Vortex.hh>
 #include <Edge.hh>
 #include <list>
@@ -8,8 +7,8 @@
 
 using namespace std;
 
-std::list<Vortex> vortexList; //Definition of the list declared in the header
-std::list<string> activityList; //Definition of the list declared in the header
+static std::list<Vortex> vortexList; //Definition of the list declared in the header
+static std::list<string> activityList; //Definition of the list declared in the header
 
 Vortex::Vortex(string name) {
     //This is the constructor
@@ -93,28 +92,3 @@ void Vortex::removeActivity(string activity) {
 
 }
 
-void Vortex::addEdge(Edge& edge)  {
-    //This method receive an edge and add it to the vortexList, also add the bi-directional edge
-    //Receive: an edge 
-    //Return: void
-    
-    this->edges.push_back(edge); //This add the edge to the origin vortex
-
-    //This loop add the edge to the destination vortex but the destination will be the origin vortex
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == edge.destination->name) {
-            Edge returnEdge(edge.distance, this);
-            vortex.edges.push_back(returnEdge);
-        }
-    }
-
-    //This loop udpate the list in order to storage the origin vortex
-    for (Vortex& vortex: vortexList) {
-        if (vortex.name == this->name) {
-            vortex.edges = this->edges;
-            return;
-        }
-    }
-
-
-}

@@ -11,7 +11,7 @@ class Edge {
     public:
         float distance;
         Vortex *destination;
-
+        Vortex *vortex; // Destination vortex
         // Constructors
         Edge(float distance, Vortex *destination);
         Edge();

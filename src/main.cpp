@@ -225,6 +225,30 @@ void modifyVortex() {
     /* } */
 }
 
+void addEdge(Edge& edge, Vortex& vortex)  {
+    //This method receive an edge and add it to the vortexList, also add the bi-directional edge
+    //Receive: an edge 
+    //Return: void
+    
+    vortex.edges.push_back(edge); //This add the edge to the origin vortex
+
+    //This loop add the edge to the destination vortex but the destination will be the origin vortex
+    for (Vortex& vortexIterator : vortexList) {
+        if (vortexIterator.name == edge.destination->name) {
+            Edge returnEdge(edge.distance, &vortexIterator);
+            vortexIterator.edges.push_back(returnEdge);
+        }
+    }
+
+    //This loop udpate the list in order to storage the origin vortex
+    for (Vortex& vortexIterator: vortexList) {
+        if (vortexIterator.name == vortex.name) {
+            vortexIterator.edges = vortex.edges;
+            return;
+        }
+    }
+}
+
 void setEdge() {
     // This function creates an edge between two vortexes
     // Receive: nothing
