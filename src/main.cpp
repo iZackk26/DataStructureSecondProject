@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <list>
+#include <set>
 #include <string>
 #include <vector>
 
@@ -51,7 +52,7 @@ void printGraph() {
     // This function prints the entire graph
     // Receive: nothing
     // Return: nothing
-
+    
     for (Vortex& vortex : vortexList) {
         std::cout << vortex << ", edges: ";
 
@@ -225,28 +226,28 @@ void modifyVortex() {
     /* } */
 }
 
-void addEdge(Edge& edge, Vortex& vortex)  {
+void addEdge(Edge& edge, Vortex* vortex)  {
     //This method receive an edge and add it to the vortexList, also add the bi-directional edge
     //Receive: an edge 
     //Return: void
     
-    vortex.edges.push_back(edge); //This add the edge to the origin vortex
+    vortex->edges.push_back(edge); //This add the edge to the origin vortex
 
     //This loop add the edge to the destination vortex but the destination will be the origin vortex
     for (Vortex& vortexIterator : vortexList) {
         if (vortexIterator.name == edge.destination->name) {
-            Edge returnEdge(edge.distance, &vortexIterator);
+            Edge returnEdge(edge.distance, vortex);
             vortexIterator.edges.push_back(returnEdge);
         }
     }
 
     //This loop udpate the list in order to storage the origin vortex
-    for (Vortex& vortexIterator: vortexList) {
-        if (vortexIterator.name == vortex.name) {
-            vortexIterator.edges = vortex.edges;
-            return;
-        }
-    }
+    //for (Vortex& vortexIterator: vortexList) {
+    //    if (vortexIterator.name == vortex.name) {
+    //        vortexIterator.edges = vortex.edges;
+    //        return;
+    //    }
+    //}
 }
 
 void setEdge() {
@@ -296,7 +297,7 @@ void setEdge() {
                 }
 
                 Edge edge(distance, &vortex);
-                originVortex->addEdge(edge);
+                addEdge(edge, originVortex);
                 return;
             } catch (const std::invalid_argument& e) {
                 std::cerr << "Invalid input for distance. Please enter a valid numeric value." << std::endl;
@@ -330,7 +331,7 @@ void setVortex() {
     Vortex vortex1("San Ramon");
     Vortex vortex2("Liberia");
     Vortex vortex3("Grecia");
-    Vortex vortex4(" Palmares");
+    Vortex vortex4("Palmares");
     Vortex vortex5("San Jose");
     Vortex vortex6("Alajuela");
     Vortex vortex7("Heredia");
@@ -349,24 +350,7 @@ void setVortex() {
     vortexList.push_back(vortex9);
     vortexList.push_back(vortex10);
     vortexList.push_back(vortex11);
-    activityList.push_back("Comer");
-    activityList.push_back("Dormir");
-    activityList.push_back("Comprar");
-
-    // setEdge();
-    // setEdge();
-
-    vortex1.addActivity("Comer");
-    vortex2.addActivity("Dormir");
-    vortex3.addActivity("Comprar");
-    vortex4.addActivity("Comer");
-    vortex5.addActivity("Dormir");
-    vortex6.addActivity("Comprar");
-    vortex7.addActivity("Comer");
-    vortex8.addActivity("Dormir");
-    vortex9.addActivity("Comprar");
-    vortex10.addActivity("Comer");
-    vortex11.addActivity("Dormir");
+    setEdge();
 }
 
 
@@ -375,49 +359,50 @@ int main() {
     string dataFile = "Information/Data.bin";
     Person* list = nullptr;
     bool exit = false;
-    while (!exit) {
-        system("clear");
-        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options"};
-        createMenu(options);
-        int option;
-        std::cin >> option;
-        std::cin.ignore();
-        if (option < 0 || option > static_cast<int>(options.size())) {
-            std::cout << "Invalid option" << std::endl;
-            continue;
-        }
-        switch (option) {
-        case 1:
-            exit = true;
-            break;
-        case 2:
-            // Calculate Route
-            break;
-        case 3:
-            printGraph();
-            break;
-        case 4:
+    //while (!exit) {
+    //    system("clear");
+    //    std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options"};
+    //    createMenu(options);
+    //    int option;
+    //    std::cin >> option;
+    //    std::cin.ignore();
+    //    if (option < 0 || option > static_cast<int>(options.size())) {
+    //        std::cout << "Invalid option" << std::endl;
+    //        continue;
+    //    }
+    //    switch (option) {
+    //    case 1:
+    //        exit = true;
+    //        break;
+    //    case 2:
+    //        printGraph();
+    //        break;
+    //    case 3:
+    //       
+    //        break;
+    //    case 4:
             // Vortex Options
-            break;
-        case 5:
+    //        break;
+    //    case 5:
             // Edge Options
-            break;
-        case 6:
+    //        break;
+    //    case 6:
             // Activity Options
-            break;
-        case 0:
-            exit = true;
-            break;
-        default:
-            std::cout << "Invalid option" << std::endl;
-        }
+    //        break;
+    //    case 0:
+    //        exit = true;
+    //        break;
+    //    default:
+    //        std::cout << "Invalid option" << std::endl;
+    //    }
 
         
-    }
-    size_t size = load(&list, "Information/Data.bin");
-    for (size_t i = 0; i < size; i++) {
-        std::cout << list[i].gender << std::endl;
-    }
-
+    //}
+    //size_t size = load(&list, "Information/Data.bin");
+    //for (size_t i = 0; i < size; i++) {
+    //    std::cout << list[i].gender << std::endl;
+    //}
+    setVortex();
+    printGraph();
     return 0;
 }
