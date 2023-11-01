@@ -586,6 +586,31 @@ void modifyVortex() {
     }
 }
 
+void depthTraversal(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path) {
+    if (originVortex.visited) {
+        return;
+    }
+
+    originVortex.visited = true;
+    path.push_back(&originVortex);
+
+    if (&originVortex == &targetVortex) {
+        for (Vortex* vortex : path) {
+            std::cout << vortex->name << " -> ";
+        }
+        std::cout << "Goal reached!" << std::endl;
+        path.pop_back(); 
+        return;
+    }
+
+    for (Edge& edge : originVortex.edges) {
+        depthTraversal(*edge.destination, targetVortex, path);
+    }
+
+    originVortex.visited = false;
+    path.pop_back();
+}
+
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
     Person p2("Female", 19, "Heredia", "Alajuela", "Comer");
@@ -626,12 +651,22 @@ void setVortex() {
     activityList.push_back(activity1);
     activityList.push_back(activity2);
     activityList.push_back(activity3);
+    setEdge();
+    setEdge();
+    setEdge();
     //setEdge();
     //setEdge();
+    //setEdge();
+    std::vector<Vortex*> path;
+    Vortex& startVortex = vortexList.front(); // El nodo de inicio (puedes ajustar esto).
+    Vortex& targetVortex = vortexList.back(); // El nodo objetivo (puedes ajustar esto).
+
+    depthTraversal(startVortex, targetVortex, path);
+    depthTraversal(vortex1, vortex3, path);
     //edgeMenu();
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
-    modifyVortex();
+    //modifyVortex();
 }
 
 
