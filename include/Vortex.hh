@@ -11,16 +11,13 @@ using std::string;
 class Vortex {
     public:
         string name;
+        bool visited;
         std::list<string*> activities;
         std::list<Edge> edges;
         
         // Constructors
         Vortex(string name);
         Vortex();
-        
-        // Methods
-        void addActivity(string activity);
-        void removeActivity(string activity);
 
         friend std::ostream& operator<<(std::ostream& os, const Vortex& vortex);
         bool operator==(const Vortex& rhs) const {
