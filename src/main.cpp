@@ -9,6 +9,7 @@
 #include <set>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 using std::string;
 std::list<Vortex> vortexList;
@@ -307,15 +308,20 @@ void edgeMenu() {
     // This function prints the edge menu
     // Receive: nothing
     // Return: nothing
+
     bool exit = false;
+    system("clear");
     while (!exit) {
-        system("clear");
-        printGraph();
         std::vector<string> options = {"Create Edge", "Delete Edge", "Modify Edge"};
         createMenu(options);
         int option;
+        try {
         std::cin >> option;
         std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
         if (option < 0 || option > static_cast<int>(options.size())) {
         std::cout << "Invalid option" << std::endl;
         return;
@@ -403,13 +409,17 @@ void deleteVortex() {
 }
 
 void modifyVortexName(Vortex& vortex) {
+    // This function modifies the name of a vortex 
+    // Receive: a pointer to a vortex 
+    // Return: nothing
+
     string newName;
     std::cout << "Enter the new name: ";
     std::getline(std::cin, newName);
 
     // Check if the new name already exists
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == newName) {
+    for (Vortex& vortexIterator : vortexList) {
+        if (vortexIterator.name == newName) {
             std::cout << "There is a place that already has that name" << std::endl;
             return;
         }
@@ -424,12 +434,104 @@ void modifyVortexName(Vortex& vortex) {
     }
 }
 
+void addActivity(Vortex& vortex) {
+    // This function adds an activity to a vortex 
+    // Receive: a vortex 
+    // Return: nothing 
+
+    string activityName;
+    std::cout << "Enter the name of the activity: ";
+    std::getline(std::cin, activityName);
+
+    std::list<string>::iterator it = std::find(activityList.begin(), activityList.end(), activityName); //This search the activity in the list and give the pointer
+    
+    //If the acivity is in the list, it will add it to the vortex
+    if (it != activityList.end()) {
+
+        // Check if the activity is already in the vortex
+        for (string* activity : vortex.activities) {
+            if (*activity == *it) {
+                std::cout << "Activity " << activityName << " is already in " << vortex.name << std::endl;
+                return;
+            }
+        }
+
+
+        // Add the activity to the vortex 
+        vortex.activities.push_back(&(*it));
+        return;
+    }
+    
+    std::cout << "Activity not found" << std::endl;
+}
+
+void removeActivity(Vortex& vortex) {
+    // This function removes an activity from a vortex 
+    // Receive: a vortex 
+    // Return: nothing
+
+    string activityName;
+    std::cout << "Enter the name of the activity: ";
+    std::getline(std::cin, activityName);
+
+    for (string* activity : vortex.activities) {
+        if (*activity == activityName) {
+            vortex.activities.remove(activity);
+            std::cout << "Activity removed" << std::endl;
+            return;
+        }
+    }
+    
+    std::cout << "Activity not found" << std::endl;
+}
+
+void modifyVortexActivities(Vortex& vortex) {
+    // This function modifies the activities of a vortex 
+    // Receive: a vortex 
+    // Return: nothing
+    
+    bool exit = false; 
+    system("clear");
+
+    while (!exit) {
+        std::vector<string> options = {"Add activity", "Delete activity"};
+        createMenu(options);
+        int option;
+        try {
+        std::cin >> option;
+        std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        if (option < 0 || option > static_cast<int>(options.size())) {
+            std::cout << "Invalid option" << std::endl;
+            return;
+        }
+        switch (option) {
+        case 1:
+            addActivity(vortex);
+            break;
+        case 2:
+            removeActivity(vortex);
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
+
+    }
+
+}
+
 void modifyVortex() {
     // This function modifies a vortex from the list of vortexes
     // Receive: nothing
     // Return: nothing
 
-    int option;
     Vortex* vortexToModify = nullptr;
     string vortexName;
     std::cout << "Enter the name of the place you want to modify: ";
@@ -448,29 +550,39 @@ void modifyVortex() {
         std::cout << "Invalid place" << std::endl;
         return;
     }
+
+    std::cout << "Notice that if you want to modify vortex edges, you have to select Edges Menu" << std::endl;
+
+    bool exit = false;
+    system("clear");
+
     // Print the options to modify the vortex
-    std::cout << "What do you want to modify?" << std::endl;
-    std::cout << "1. Name" << std::endl;
-    std::cout << "2. Edges" << std::endl;
-    std::cout << "3. Activities" << std::endl;
-    std::cin >> option;
-
-    std::cin.ignore();
-
-    // Execute the option selected by the user
-    switch (option) {
-    case 1:
-        modifyVortexName(*vortexToModify);
-        break;
-    case 2:
-        // Modify the edges of the vortex
-        break;
-    case 3:
-        // Modify the activities of the vortex
-        break;
-    default:
-        std::cout << "Invalid option" << std::endl;
-        break;
+    while (!exit) {
+        int option;
+        std::vector<string> options = {"Modify name", "Modify activities"};
+        createMenu(options);
+        try {
+        std::cin >> option;
+        std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        // Execute the option selected by the user
+        switch (option) {
+        case 1:
+            modifyVortexName(*vortexToModify);
+            break;
+        case 2:
+            modifyVortexActivities(*vortexToModify);
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
     }
 }
 
@@ -507,9 +619,19 @@ void setVortex() {
     vortexList.push_back(vortex9);
     vortexList.push_back(vortex10);
     vortexList.push_back(vortex11);
-    setEdge();
-    setEdge();
-    edgeMenu();
+    string activity1 = "Comer";
+    string activity2 = "Dormir";
+    string activity3 = "Estudiar";
+
+    activityList.push_back(activity1);
+    activityList.push_back(activity2);
+    activityList.push_back(activity3);
+    //setEdge();
+    //setEdge();
+    //edgeMenu();
+    //modifyVortexName(vortex1);
+    //addActivity(vortex1);
+    modifyVortex();
 }
 
 
