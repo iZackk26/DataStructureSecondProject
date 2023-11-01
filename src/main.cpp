@@ -48,6 +48,16 @@ size_t load(Person** person, string filename) {
     *person = p;
     return size;
 }
+
+void createMenu(const std::vector<string>& options) {
+    int c = 1;
+    for (const string& option : options) {
+        std::cout << c << ". " << option << std::endl;
+        c++;
+    }
+    std::cout << "0. Exit" << std::endl;
+}
+
 void printGraph() {
     // This function prints the entire graph
     // Receive: nothing
@@ -77,140 +87,6 @@ void printGraph() {
         }
 
         std::cout << "\n" << std::endl;
-    }
-}
-
-void createVortex() {
-    // This function creates a vortex and adds it to the list of vortexes
-    // Receive: nothing
-    // Return: nothing
-    string vortexName;
-
-    std::cout << "Enter the name of the place: ";
-    std::getline(std::cin, vortexName);
-
-    // Check if the vortex already exists
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == vortexName) {
-            std::cout << "This place already exists" << std::endl;
-            return;
-        }
-    }
-
-    Vortex vortex(vortexName); // Create the vortex if it doesn't exist and add it to the list
-    vortexList.push_back(vortex);
-}
-
-void deleteVortex() {
-    // This function deletes a vortex from the list of vortexes
-    // Receive: nothing
-    // Return: nothing
-
-    string vortexName;
-    Vortex* vortexToDelete = nullptr;
-
-    std::cout << "Enter the name of the place you want to delete (notice that this will delete all the edges related to that vortex): ";
-    std::getline(std::cin, vortexName);
-
-    // Find the vortex with the name entered by the user and delete it
-    auto it = vortexList.begin();
-    while (it != vortexList.end()) {
-        if (it->name == vortexName) {
-            vortexToDelete = &(*it);
-            it = vortexList.erase(it); // Elimina el vortex y actualiza el iterador
-        } else {
-            ++it;
-        }
-    }
-
-    // If the vortex was not found, print an error message and return
-    if (vortexToDelete == nullptr) {
-        std::cout << "Invalid place" << std::endl;
-        return;
-    }
-
-    // Delete all the edges that are related to the vortex
-    for (Vortex& vortex : vortexList) {
-        auto edgeIt = vortex.edges.begin();
-        while (edgeIt != vortex.edges.end()) {
-            if (edgeIt->destination == vortexToDelete) {
-                edgeIt = vortex.edges.erase(edgeIt); // Elimina el edge y actualiza el iterador
-            } else {
-                ++edgeIt;
-            }
-        }
-    }
-}
-
-void modifyVortexName(Vortex& vortex) {
-    string newName;
-    std::cout << "Enter the new name: ";
-    std::getline(std::cin, newName);
-
-    // Check if the new name already exists
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == newName) {
-            std::cout << "There is a place that already has that name" << std::endl;
-            return;
-        }
-    }
-
-    // Change the name of the vortex
-    for (Vortex& iterator : vortexList) {
-        if (iterator.name == vortex.name) {
-            iterator.name = newName;
-            return;
-        }
-    }
-}
-
-void modifyVortex() {
-    // This function modifies a vortex from the list of vortexes
-    // Receive: nothing
-    // Return: nothing
-
-    int option;
-    Vortex* vortexToModify = nullptr;
-    string vortexName;
-    std::cout << "Enter the name of the place you want to modify: ";
-    std::getline(std::cin, vortexName);
-
-    // Find the vortex with the name entered by the user
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == vortexName) {
-            vortexToModify = &vortex;
-            break;
-        }
-    }
-
-    // If the vortex was not found, print an error message and return
-    if (vortexToModify == nullptr) {
-        std::cout << "Invalid place" << std::endl;
-        return;
-    }
-    // Print the options to modify the vortex
-    std::cout << "What do you want to modify?" << std::endl;
-    std::cout << "1. Name" << std::endl;
-    std::cout << "2. Edges" << std::endl;
-    std::cout << "3. Activities" << std::endl;
-    std::cin >> option;
-
-    std::cin.ignore();
-
-    // Execute the option selected by the user
-    switch (option) {
-    case 1:
-        modifyVortexName(*vortexToModify);
-        break;
-    case 2:
-        // Modify the edges of the vortex
-        break;
-    case 3:
-        // Modify the activities of the vortex
-        break;
-    default:
-        std::cout << "Invalid option" << std::endl;
-        break;
     }
 }
 
@@ -427,15 +303,175 @@ void setEdge() {
     std::cout << "Invalid destination" << std::endl;
 }
 
-
-
-void createMenu(const std::vector<string>& options) {
-    int c = 1;
-    for (const string& option : options) {
-        std::cout << c << ". " << option << std::endl;
-        c++;
+void edgeMenu() {
+    // This function prints the edge menu
+    // Receive: nothing
+    // Return: nothing
+    bool exit = false;
+    while (!exit) {
+        system("clear");
+        printGraph();
+        std::vector<string> options = {"Create Edge", "Delete Edge", "Modify Edge"};
+        createMenu(options);
+        int option;
+        std::cin >> option;
+        std::cin.ignore();
+        if (option < 0 || option > static_cast<int>(options.size())) {
+        std::cout << "Invalid option" << std::endl;
+        return;
+        }
+        switch (option) {
+        case 1:
+            setEdge();
+            break;
+        case 2:
+            deleteEdge();
+            break;
+        case 3:
+            modifyEdge();
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
     }
-    std::cout << "0. Exit" << std::endl;
+}
+
+void createVortex() {
+    // This function creates a vortex and adds it to the list of vortexes
+    // Receive: nothing
+    // Return: nothing
+    string vortexName;
+
+    std::cout << "Enter the name of the place: ";
+    std::getline(std::cin, vortexName);
+
+    // Check if the vortex already exists
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            std::cout << "This place already exists" << std::endl;
+            return;
+        }
+    }
+
+    Vortex vortex(vortexName); // Create the vortex if it doesn't exist and add it to the list
+    vortexList.push_back(vortex);
+}
+
+void deleteVortex() {
+    // This function deletes a vortex from the list of vortexes
+    // Receive: nothing
+    // Return: nothing
+
+    string vortexName;
+    Vortex* vortexToDelete = nullptr;
+
+    std::cout << "Enter the name of the place you want to delete (notice that this will delete all the edges related to that vortex): ";
+    std::getline(std::cin, vortexName);
+
+    // Find the vortex with the name entered by the user and delete it
+    auto it = vortexList.begin();
+    while (it != vortexList.end()) {
+        if (it->name == vortexName) {
+            vortexToDelete = &(*it);
+            it = vortexList.erase(it); // Elimina el vortex y actualiza el iterador
+        } else {
+            ++it;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return
+    if (vortexToDelete == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+
+    // Delete all the edges that are related to the vortex
+    for (Vortex& vortex : vortexList) {
+        auto edgeIt = vortex.edges.begin();
+        while (edgeIt != vortex.edges.end()) {
+            if (edgeIt->destination == vortexToDelete) {
+                edgeIt = vortex.edges.erase(edgeIt); // Elimina el edge y actualiza el iterador
+            } else {
+                ++edgeIt;
+            }
+        }
+    }
+}
+
+void modifyVortexName(Vortex& vortex) {
+    string newName;
+    std::cout << "Enter the new name: ";
+    std::getline(std::cin, newName);
+
+    // Check if the new name already exists
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == newName) {
+            std::cout << "There is a place that already has that name" << std::endl;
+            return;
+        }
+    }
+
+    // Change the name of the vortex
+    for (Vortex& iterator : vortexList) {
+        if (iterator.name == vortex.name) {
+            iterator.name = newName;
+            return;
+        }
+    }
+}
+
+void modifyVortex() {
+    // This function modifies a vortex from the list of vortexes
+    // Receive: nothing
+    // Return: nothing
+
+    int option;
+    Vortex* vortexToModify = nullptr;
+    string vortexName;
+    std::cout << "Enter the name of the place you want to modify: ";
+    std::getline(std::cin, vortexName);
+
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            vortexToModify = &vortex;
+            break;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return
+    if (vortexToModify == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+    // Print the options to modify the vortex
+    std::cout << "What do you want to modify?" << std::endl;
+    std::cout << "1. Name" << std::endl;
+    std::cout << "2. Edges" << std::endl;
+    std::cout << "3. Activities" << std::endl;
+    std::cin >> option;
+
+    std::cin.ignore();
+
+    // Execute the option selected by the user
+    switch (option) {
+    case 1:
+        modifyVortexName(*vortexToModify);
+        break;
+    case 2:
+        // Modify the edges of the vortex
+        break;
+    case 3:
+        // Modify the activities of the vortex
+        break;
+    default:
+        std::cout << "Invalid option" << std::endl;
+        break;
+    }
 }
 
 void setPeople(string fileName) {
@@ -473,10 +509,7 @@ void setVortex() {
     vortexList.push_back(vortex11);
     setEdge();
     setEdge();
-    //modifyVortex();
-    //deleteVortex();
-    //deleteEdge();
-    modifyEdge();
+    edgeMenu();
 }
 
 
