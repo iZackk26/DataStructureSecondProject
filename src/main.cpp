@@ -207,27 +207,15 @@ void modifyVortex() {
         break;
     case 3:
         // Modify the activities of the vortex
+        break;
     default:
         std::cout << "Invalid option" << std::endl;
         break;
     }
-    /* switch (option) { */
-    /*     case "1": */
-    /*         //Modify the name of the vortex */
-    /*         break; */
-    /*     case "2": */
-    /*         //Modify the edges of the vortex */
-    /*         break; */
-    /*     case "3": */
-    /*         //Modify the activities of the vortex */
-    /*     default: */
-    /*         std::cout << "Invalid option" << std::endl; */
-    /*         break; */
-    /* } */
 }
 
 void addEdge(Edge& edge, Vortex* vortex)  {
-    //This method receive an edge and add it to the vortexList, also add the bi-directional edge
+    //This method receive an edge and the pointer to the origin vortex, then add it to the vortexList, also add the bi-directional edge
     //Receive: an edge 
     //Return: void
     
@@ -240,14 +228,58 @@ void addEdge(Edge& edge, Vortex* vortex)  {
             vortexIterator.edges.push_back(returnEdge);
         }
     }
+}
 
-    //This loop udpate the list in order to storage the origin vortex
-    //for (Vortex& vortexIterator: vortexList) {
-    //    if (vortexIterator.name == vortex.name) {
-    //        vortexIterator.edges = vortex.edges;
-    //        return;
-    //    }
-    //}
+void deleteEdge() {
+    string vortexName;
+    string EdgeName;
+    Vortex* destinationVortex = nullptr;
+
+    std::cout << "Enter the name of the place you want to delete the edge: ";
+    std::getline(std::cin, vortexName);
+
+    std::cout << "Enter the destination of the edge you want to delete: ";
+    std::getline(std::cin, EdgeName);
+
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            destinationVortex = &vortex;
+            auto edgeIt = vortex.edges.begin();
+            while (edgeIt != vortex.edges.end()) {
+                if (edgeIt->destination->name == EdgeName) {
+                    vortex.edges.remove(*edgeIt); //If it founds the edge, it will delete it
+                    std::cout << "Edge removed" << std::endl;
+                    break;
+                } else {
+                    ++edgeIt;
+                }
+            }
+            std::cout << "Invalid destination" << std::endl;
+        }
+    }
+    
+    // If the vortex was not found, print an error message and return
+    if (destinationVortex == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+    
+    //This loop delete the edge from the destination vortex
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == EdgeName) {
+            auto edgeIt = vortex.edges.begin();
+            while (edgeIt != vortex.edges.end()) {
+                if (edgeIt->destination->name == vortexName) {
+                    vortex.edges.remove(*edgeIt);
+                    std::cout << "Edge removed" << std::endl;
+                    return;
+                } else {
+                    ++edgeIt;
+                }
+            }
+        }
+    }
 }
 
 void setEdge() {
@@ -308,6 +340,8 @@ void setEdge() {
     std::cout << "Invalid destination" << std::endl;
 }
 
+
+
 void createMenu(const std::vector<string>& options) {
     int c = 1;
     for (const string& option : options) {
@@ -351,6 +385,10 @@ void setVortex() {
     vortexList.push_back(vortex10);
     vortexList.push_back(vortex11);
     setEdge();
+    setEdge();
+    //modifyVortex();
+    //deleteVortex();
+    deleteEdge();
 }
 
 
