@@ -231,6 +231,10 @@ void addEdge(Edge& edge, Vortex* vortex)  {
 }
 
 void deleteEdge() {
+    // This function deletes an edge from the list of Edges of the vortexes
+    // Receive: nothing
+    // Return: nothing
+
     string vortexName;
     string EdgeName;
     Vortex* destinationVortex = nullptr;
@@ -273,6 +277,89 @@ void deleteEdge() {
                 if (edgeIt->destination->name == vortexName) {
                     vortex.edges.remove(*edgeIt);
                     std::cout << "Edge removed" << std::endl;
+                    return;
+                } else {
+                    ++edgeIt;
+                }
+            }
+        }
+    }
+}
+
+void modifyEdge() {
+    // This function modifies an edge from the list of Edges of the vortexes
+    // Receive: nothing
+    // Return: nothing
+
+    string vortexName;
+    string EdgeName;
+    Vortex* destinationVortex = nullptr;
+    int newDistance;
+
+    try {
+        std::cout << "Enter the name of the place you want to modify the edge: ";
+        std::getline(std::cin, vortexName);
+    
+        std::cout << "Those are the edges of this place: " << std::endl;
+        for (Vortex& vortex : vortexList) {
+            if (vortex.name == vortexName) {
+                for (Edge& edge : vortex.edges) {
+                    std::cout << edge << " ";
+                }
+            }
+        }
+        std::cout << std::endl;
+
+        std::cout << "Enter the destination of the edge you want to modify: ";
+        std::getline(std::cin, EdgeName);
+
+
+        std::cout << "Enter the new destination distance: ";
+        std::cin >> newDistance;
+        std::cin.ignore();
+
+        if (newDistance <= 0) {
+            std::cout << "Invalid distance" << std::endl;
+            return;
+        }
+
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for distance. Please enter a valid numeric value." << std::endl;
+            return;
+    }
+
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            destinationVortex = &vortex;
+            auto edgeIt = vortex.edges.begin();
+            while (edgeIt != vortex.edges.end()) {
+                if (edgeIt->destination->name == EdgeName) {
+                    edgeIt->distance = newDistance;
+                    std::cout << "Edge modified" << std::endl;
+                    break;
+                } else {
+                    ++edgeIt;
+                }
+            }
+            std::cout << "Invalid destination" << std::endl;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return 
+    if (destinationVortex == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+
+    //This loop modify the edge from the destination vortexes
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == EdgeName) {
+            auto edgeIt = vortex.edges.begin();
+            while (edgeIt != vortex.edges.end()) {
+                if (edgeIt->destination->name == vortexName) {
+                    edgeIt->distance = newDistance;
+                    std::cout << "Edge modified" << std::endl;
                     return;
                 } else {
                     ++edgeIt;
@@ -388,7 +475,8 @@ void setVortex() {
     setEdge();
     //modifyVortex();
     //deleteVortex();
-    deleteEdge();
+    //deleteEdge();
+    modifyEdge();
 }
 
 
