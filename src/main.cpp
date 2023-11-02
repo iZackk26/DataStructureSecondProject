@@ -586,7 +586,7 @@ void modifyVortex() {
     }
 }
 
-void depthTraversal(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path) {
+void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path) {
     if (originVortex.visited) {
         return;
     }
@@ -595,21 +595,22 @@ void depthTraversal(Vortex& originVortex, Vortex& targetVortex, std::vector<Vort
     path.push_back(&originVortex);
 
     if (&originVortex == &targetVortex) {
+        // Imprimir el camino
         for (Vortex* vortex : path) {
             std::cout << vortex->name << " -> ";
         }
         std::cout << "Goal reached!" << std::endl;
-        path.pop_back(); 
-        return;
     }
 
     for (Edge& edge : originVortex.edges) {
-        depthTraversal(*edge.destination, targetVortex, path);
+        findPaths(*edge.destination, targetVortex, path);
     }
 
+    // Una vez que hayas explorado todos los caminos desde este nodo, desmarcarlo como no visitado
     originVortex.visited = false;
     path.pop_back();
 }
+
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -658,11 +659,16 @@ void setVortex() {
     //setEdge();
     //setEdge();
     std::vector<Vortex*> path;
-    Vortex& startVortex = vortexList.front(); // El nodo de inicio (puedes ajustar esto).
-    Vortex& targetVortex = vortexList.back(); // El nodo objetivo (puedes ajustar esto).
+    std::vector<float> distances;
+    
+    Vortex& firstVortex = vortexList.front();  // Obtén un puntero al primer vértice
+    std::list<Vortex>::iterator it = vortexList.begin();  // Inicializa un iterador al principio de la lista
+    std::advance(it, 2);  // Avanza el iterador dos posiciones (para obtener el tercer elemento)
 
-    depthTraversal(startVortex, targetVortex, path);
-    depthTraversal(vortex1, vortex3, path);
+    Vortex& thirdVortex = *it;  // Obtén una referencia al tercer vértice
+
+
+    findPaths(firstVortex, thirdVortex, path);
     //edgeMenu();
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
