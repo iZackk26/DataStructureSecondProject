@@ -586,7 +586,7 @@ void modifyVortex() {
     }
 }
 
-void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path) {
+void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path, std::vector<std::vector<Vortex*>>& allPaths) {
     if (originVortex.visited) {
         return;
     }
@@ -595,18 +595,15 @@ void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>&
     path.push_back(&originVortex);
 
     if (&originVortex == &targetVortex) {
-        // Imprimir el camino
-        for (Vortex* vortex : path) {
-            std::cout << vortex->name << " -> ";
-        }
-        std::cout << "Goal reached!" << std::endl;
+        // Alcanzaste el nodo de destino, guarda la ruta en allPaths
+        allPaths.push_back(path);
     }
 
     for (Edge& edge : originVortex.edges) {
-        findPaths(*edge.destination, targetVortex, path);
+        findPaths(*edge.destination, targetVortex, path, allPaths);
     }
 
-    // Una vez que hayas explorado todos los caminos desde este nodo, desmarcarlo como no visitado
+    // Una vez que hayas explorado todos los caminos desde este nodo, desmarca el nodo como no visitado
     originVortex.visited = false;
     path.pop_back();
 }
@@ -659,7 +656,7 @@ void setVortex() {
     //setEdge();
     //setEdge();
     std::vector<Vortex*> path;
-    std::vector<float> distances;
+    std::vector<std::vector<Vortex*>> allPaths;
     
     Vortex& firstVortex = vortexList.front();  // Obtén un puntero al primer vértice
     std::list<Vortex>::iterator it = vortexList.begin();  // Inicializa un iterador al principio de la lista
@@ -668,7 +665,17 @@ void setVortex() {
     Vortex& thirdVortex = *it;  // Obtén una referencia al tercer vértice
 
 
-    findPaths(firstVortex, thirdVortex, path);
+    findPaths(firstVortex, thirdVortex, path, allPaths);
+
+    for (std::vector<Vortex*>& path : allPaths) {
+        for (size_t i = 0; i < path.size(); i++) {
+            std::cout << path[i]->name;
+            if (i < path.size() - 1) {
+                std::cout << " -> ";
+            }
+        }
+        std::cout << std::endl;
+    }
     //edgeMenu();
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
