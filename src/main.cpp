@@ -696,33 +696,33 @@ void amplitud() {
     }
 }
 
-void profundidad(Vortex* originVortex, std::vector<Vortex*>& visitedVertices) {
+void profundidad(Vortex& originVortex, std::vector<Vortex*>& visitedVertices) {
     // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph
     // Receive: a pointer to a vortex and a vector of visited vertices
     // Return: nothing
     // (For the sake of clarity, it is called 'profundidad' and not 'Depth-First Search')
 
     // If the vortex was already visited on this path, return
-    if (originVortex == nullptr || std::find(visitedVertices.begin(), visitedVertices.end(), originVortex) != visitedVertices.end()) {
+    if (originVortex.visited) {
         return;
     }
 
     std::cout << "Profundidad (DFS) traversal: " << std::endl;
-    std::cout << originVortex->name << "\t";
-    visitedVertices.push_back(originVortex);
+    std::cout << originVortex.name << "\t";
+    originVortex.visited = true;
+    visitedVertices.push_back(&originVortex);
 
-    for (const Edge& edge : originVortex->edges) {
+    for (Edge& edge : originVortex.edges) {
         std::cout << " (" << edge.distance << " -> " << edge.destination->name << ") ";
-        profundidad(edge.destination, visitedVertices);
+        profundidad(*edge.destination, visitedVertices);
     }
 
     // After visiting all adjacent vertices, remove the current vortex from the vector 
-    originVortex->visited = false;
+    originVortex.visited = false;
     visitedVertices.pop_back();
 
     std::cout << std::endl;
 }
-
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -779,7 +779,8 @@ void setVortex() {
     std::cout << std::endl;
     uncheckGraph();
     std::vector<Vortex*> visitedVertices;
-    profundidad(&vortex1, visitedVertices);
+    Vortex firstVortex = vortexList.front();
+    profundidad(firstVortex, visitedVertices);
     uncheckGraph();
 }
 
@@ -833,6 +834,7 @@ int main() {
     //    std::cout << list[i].gender << std::endl;
     //}
     setVortex();
-    //printGraph();
+    std::cout << std::endl;
+    printGraph();
     return 0;
 }
