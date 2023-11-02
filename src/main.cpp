@@ -91,6 +91,16 @@ void printGraph() {
     }
 }
 
+void uncheckGraph() {
+    // This function unchecks the entire graph
+    // Receive: nothing
+    // Return: nothing
+
+    for (Vortex& vortex : vortexList) {
+        vortex.visited = false;
+    }
+}
+
 void addEdge(Edge& edge, Vortex* vortex)  {
     //This method receive an edge and the pointer to the origin vortex, then add it to the vortexList, also add the bi-directional edge
     //Receive: an edge 
@@ -680,11 +690,39 @@ void amplitud() {
     for (const Vortex& vortex : vortexList) {
         std::cout << vortex << ", destinations: ";
         for (const Edge& edge : vortex.edges) {
-            std::cout << " (" << edge.distance << " -> " << edge.destination->name << ") ";
+            std::cout << "(" << edge.distance << " -> " << edge.destination->name << ") ";
         }
         std::cout << std::endl;
     }
 }
+
+void profundidad(Vortex* originVortex, std::vector<Vortex*>& visitedVertices) {
+    // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph
+    // Receive: a pointer to a vortex and a vector of visited vertices
+    // Return: nothing
+    // (For the sake of clarity, it is called 'profundidad' and not 'Depth-First Search')
+
+    // If the vortex was already visited on this path, return
+    if (originVortex == nullptr || std::find(visitedVertices.begin(), visitedVertices.end(), originVortex) != visitedVertices.end()) {
+        return;
+    }
+
+    std::cout << "Profundidad (DFS) traversal: " << std::endl;
+    std::cout << originVortex->name << "\t";
+    visitedVertices.push_back(originVortex);
+
+    for (const Edge& edge : originVortex->edges) {
+        std::cout << " (" << edge.distance << " -> " << edge.destination->name << ") ";
+        profundidad(edge.destination, visitedVertices);
+    }
+
+    // After visiting all adjacent vertices, remove the current vortex from the vector 
+    originVortex->visited = false;
+    visitedVertices.pop_back();
+
+    std::cout << std::endl;
+}
+
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -736,8 +774,13 @@ void setVortex() {
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
     //modifyVortex();
-    findShortestPath("San Ramon", "Limon");
+    //findShortestPath("San Ramon", "Limon");
     amplitud();
+    std::cout << std::endl;
+    uncheckGraph();
+    std::vector<Vortex*> visitedVertices;
+    profundidad(&vortex1, visitedVertices);
+    uncheckGraph();
 }
 
 
