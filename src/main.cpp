@@ -587,6 +587,11 @@ void modifyVortex() {
 }
 
 void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path, std::vector<std::vector<Vortex*>>& allPaths, std::vector<float>& distances, float currentDistance) {
+    // This function finds all the paths between two vortexes
+    // Receive: two vortexes, a vector of vortexes, a vector of vectors of vortexes, a vector of distances and a float
+    // Return: nothing
+
+    // If the vortex was already visited, return
     if (originVortex.visited) {
         return;
     }
@@ -594,21 +599,27 @@ void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>&
     originVortex.visited = true;
     path.push_back(&originVortex);
 
+    // If the origin vortex is the same as the target vortex, add the path to the list of paths
     if (&originVortex == &targetVortex) {
         allPaths.push_back(path);
         distances.push_back(currentDistance);  
     }
 
+    // Find the paths between the origin vortex and the target vortex by visiting all the edges of the origin vortex
     for (Edge& edge : originVortex.edges) {
         findPaths(*edge.destination, targetVortex, path, allPaths, distances, currentDistance + edge.distance);
     }
 
+    // Mark the vortex as not visited and remove it from the path
     originVortex.visited = false;
     path.pop_back();
 }
 
 void findShortestPath(string originVortexName, string targetVortexName) {
-    
+    // This function finds the shortest path between two vortexes by using the findPaths function
+    // Receive: two strings (the names of the vortexes) 
+    // Return: nothing
+
     Vortex* originVortex = nullptr;
     Vortex* targetVortex = nullptr;
 
@@ -616,6 +627,7 @@ void findShortestPath(string originVortexName, string targetVortexName) {
     std::vector<std::vector<Vortex*>> allPaths;
     std::vector<float> distances;
     
+    // Find the vortexes with the names entered by the user
     for (Vortex& vortex : vortexList) {
         if (vortex.name == originVortexName) {
             originVortex = &vortex;
@@ -625,26 +637,19 @@ void findShortestPath(string originVortexName, string targetVortexName) {
         }
     }
 
+    // Call to findPaths function
     findPaths(*originVortex, *targetVortex, path, allPaths, distances, 0);
-
-    //for (std::vector<Vortex*>& path : allPaths) {
-    //    for (size_t i = 0; i < path.size(); i++) {
-    //        std::cout << path[i]->name;
-    //        if (i < path.size() - 1) {
-    //            std::cout << " -> ";
-    //        }
-    //    }
-    //    std::cout << " " << distances[&path - &allPaths[0]] << std::endl;
-    //    std::cout << std::endl;
-    //}
     
+    // If there are no paths between the vortexes, print an error message and return
     if (allPaths.empty()) {
         std::cout << "There is no path between " << originVortexName << " and " << targetVortexName << std::endl;
         return;
     }
 
+    // Find the shortest path
     auto minDistance = std::min_element(distances.begin(), distances.end());
 
+    // If the shortest path was found, print it
     if (minDistance != distances.end()) {
         int minIndex = std::distance(distances.begin(), minDistance);
         std::cout << "The shortest path is: " << std::endl;
@@ -662,6 +667,23 @@ void findShortestPath(string originVortexName, string targetVortexName) {
         std::cout << "No minimum distance found." << std::endl;
     }
 
+}
+
+void amplitud() {
+    // This function does a Breadth-First Search (BFS) traversal of the vertices in the Graph
+    // Receive: nothing
+    // Return: nothing
+    // (For the sake of clarity, it is called 'amplitud' and not 'Breadth-First Search')
+
+    std::cout << "Amplitud (BFS) traversal: " << std::endl;
+
+    for (const Vortex& vortex : vortexList) {
+        std::cout << vortex << ", destinations: ";
+        for (const Edge& edge : vortex.edges) {
+            std::cout << " (" << edge.distance << " -> " << edge.destination->name << ") ";
+        }
+        std::cout << std::endl;
+    }
 }
 
 void setPeople(string fileName) {
@@ -715,6 +737,7 @@ void setVortex() {
     //addActivity(vortex1);
     //modifyVortex();
     findShortestPath("San Ramon", "Limon");
+    amplitud();
 }
 
 
@@ -767,6 +790,6 @@ int main() {
     //    std::cout << list[i].gender << std::endl;
     //}
     setVortex();
-    printGraph();
+    //printGraph();
     return 0;
 }
