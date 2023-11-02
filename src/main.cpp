@@ -707,8 +707,7 @@ void profundidad(Vortex& originVortex, std::vector<Vortex*>& visitedVertices) {
         return;
     }
 
-    std::cout << "Profundidad (DFS) traversal: " << std::endl;
-    std::cout << originVortex.name << "\t";
+    std::cout << originVortex.name << ", destinations: ";
     originVortex.visited = true;
     visitedVertices.push_back(&originVortex);
 
@@ -718,11 +717,11 @@ void profundidad(Vortex& originVortex, std::vector<Vortex*>& visitedVertices) {
     }
 
     // After visiting all adjacent vertices, remove the current vortex from the vector 
-    originVortex.visited = false;
     visitedVertices.pop_back();
 
     std::cout << std::endl;
 }
+
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -780,6 +779,7 @@ void setVortex() {
     uncheckGraph();
     std::vector<Vortex*> visitedVertices;
     Vortex firstVortex = vortexList.front();
+    std::cout << "Profundidad (DFS) traversal: " << std::endl;
     profundidad(firstVortex, visitedVertices);
     uncheckGraph();
 }
