@@ -586,7 +586,7 @@ void modifyVortex() {
     }
 }
 
-void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path, std::vector<std::vector<Vortex*>>& allPaths) {
+void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>& path, std::vector<std::vector<Vortex*>>& allPaths, std::vector<float>& distances, float currentDistance) {
     if (originVortex.visited) {
         return;
     }
@@ -595,19 +595,74 @@ void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>&
     path.push_back(&originVortex);
 
     if (&originVortex == &targetVortex) {
-        // Alcanzaste el nodo de destino, guarda la ruta en allPaths
         allPaths.push_back(path);
+        distances.push_back(currentDistance);  
     }
 
     for (Edge& edge : originVortex.edges) {
-        findPaths(*edge.destination, targetVortex, path, allPaths);
+        findPaths(*edge.destination, targetVortex, path, allPaths, distances, currentDistance + edge.distance);
     }
 
-    // Una vez que hayas explorado todos los caminos desde este nodo, desmarca el nodo como no visitado
     originVortex.visited = false;
     path.pop_back();
 }
 
+void findShortestPath(string originVortexName, string targetVortexName) {
+    
+    Vortex* originVortex = nullptr;
+    Vortex* targetVortex = nullptr;
+
+    std::vector<Vortex*> path;
+    std::vector<std::vector<Vortex*>> allPaths;
+    std::vector<float> distances;
+    
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == originVortexName) {
+            originVortex = &vortex;
+        }
+        if (vortex.name == targetVortexName) {
+            targetVortex = &vortex;
+        }
+    }
+
+    findPaths(*originVortex, *targetVortex, path, allPaths, distances, 0);
+
+    //for (std::vector<Vortex*>& path : allPaths) {
+    //    for (size_t i = 0; i < path.size(); i++) {
+    //        std::cout << path[i]->name;
+    //        if (i < path.size() - 1) {
+    //            std::cout << " -> ";
+    //        }
+    //    }
+    //    std::cout << " " << distances[&path - &allPaths[0]] << std::endl;
+    //    std::cout << std::endl;
+    //}
+    
+    if (allPaths.empty()) {
+        std::cout << "There is no path between " << originVortexName << " and " << targetVortexName << std::endl;
+        return;
+    }
+
+    auto minDistance = std::min_element(distances.begin(), distances.end());
+
+    if (minDistance != distances.end()) {
+        int minIndex = std::distance(distances.begin(), minDistance);
+        std::cout << "The shortest path is: " << std::endl;
+
+        for (size_t i = 0; i < allPaths[minIndex].size(); i++) {
+            std::cout << allPaths[minIndex][i]->name;
+            if (i < allPaths[minIndex].size() - 1) {
+                std::cout << " -> ";
+            }
+        }
+        
+        std::cout << ". The distance is: " << distances[minIndex] << std::endl;
+
+    } else {
+        std::cout << "No minimum distance found." << std::endl;
+    }
+
+}
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -655,31 +710,11 @@ void setVortex() {
     //setEdge();
     //setEdge();
     //setEdge();
-    std::vector<Vortex*> path;
-    std::vector<std::vector<Vortex*>> allPaths;
-    
-    Vortex& firstVortex = vortexList.front();  // Obtén un puntero al primer vértice
-    std::list<Vortex>::iterator it = vortexList.begin();  // Inicializa un iterador al principio de la lista
-    std::advance(it, 2);  // Avanza el iterador dos posiciones (para obtener el tercer elemento)
-
-    Vortex& thirdVortex = *it;  // Obtén una referencia al tercer vértice
-
-
-    findPaths(firstVortex, thirdVortex, path, allPaths);
-
-    for (std::vector<Vortex*>& path : allPaths) {
-        for (size_t i = 0; i < path.size(); i++) {
-            std::cout << path[i]->name;
-            if (i < path.size() - 1) {
-                std::cout << " -> ";
-            }
-        }
-        std::cout << std::endl;
-    }
     //edgeMenu();
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
     //modifyVortex();
+    findShortestPath("San Ramon", "Limon");
 }
 
 
