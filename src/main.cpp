@@ -64,6 +64,9 @@ void printGraph() {
     // Receive: nothing
     // Return: nothing
     
+    system("clear");
+    std::cout << "Graph: \n" << std::endl;
+
     for (Vortex& vortex : vortexList) {
         std::cout << vortex << ", edges: ";
 
@@ -122,6 +125,9 @@ void deleteEdge() {
     // Receive: nothing
     // Return: nothing
 
+    system("clear");
+    std::cout << "Deleting an edge \n" << std::endl;
+
     string vortexName;
     string EdgeName;
     Vortex* destinationVortex = nullptr;
@@ -177,6 +183,9 @@ void modifyEdge() {
     // This function modifies an edge from the list of Edges of the vortexes
     // Receive: nothing
     // Return: nothing
+
+    system("clear");
+    std::cout << "Modifying an edge \n" << std::endl;
 
     string vortexName;
     string EdgeName;
@@ -261,6 +270,9 @@ void setEdge() {
     // Receive: nothing
     // Return: nothing
 
+    system("clear");
+    std::cout << "Creating an edge between two places \n" << std::endl;
+
     int distance;
     Vortex* originVortex = nullptr;
     string originVortexName;
@@ -318,9 +330,8 @@ void edgeMenu() {
     // This function prints the edge menu
     // Receive: nothing
     // Return: nothing
-
-    bool exit = false;
     system("clear");
+    bool exit = false;
     while (!exit) {
         std::vector<string> options = {"Create Edge", "Delete Edge", "Modify Edge"};
         createMenu(options);
@@ -360,6 +371,10 @@ void createVortex() {
     // This function creates a vortex and adds it to the list of vortexes
     // Receive: nothing
     // Return: nothing
+
+    system("clear");
+    std::cout << "Creating a place \n" << std::endl;
+
     string vortexName;
 
     std::cout << "Enter the name of the place: ";
@@ -381,6 +396,9 @@ void deleteVortex() {
     // This function deletes a vortex from the list of vortexes
     // Receive: nothing
     // Return: nothing
+
+    system("clear");
+    std::cout << "Deleting a place \n" << std::endl;
 
     string vortexName;
     Vortex* vortexToDelete = nullptr;
@@ -418,12 +436,35 @@ void deleteVortex() {
     }
 }
 
-void modifyVortexName(Vortex& vortex) {
+void modifyVortexName() {
     // This function modifies the name of a vortex 
-    // Receive: a pointer to a vortex 
+    // Receive: nothing
     // Return: nothing
+    
+    system("clear");
+    std::cout << "Modifying the name of a place \n" << std::endl;
 
+    string vortexName;
     string newName;
+    Vortex* vortexToModify = nullptr;
+    
+    std::cout << "Enter the name of the place you want to modify: ";
+    std::getline(std::cin, vortexName);
+
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            vortexToModify = &vortex;
+            break;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return 
+    if (vortexToModify == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+
     std::cout << "Enter the new name: ";
     std::getline(std::cin, newName);
 
@@ -437,19 +478,44 @@ void modifyVortexName(Vortex& vortex) {
 
     // Change the name of the vortex
     for (Vortex& iterator : vortexList) {
-        if (iterator.name == vortex.name) {
+        if (iterator.name == vortexName) {
             iterator.name = newName;
             return;
         }
     }
 }
 
-void addActivity(Vortex& vortex) {
+void addActivity() {
     // This function adds an activity to a vortex 
-    // Receive: a vortex 
+    // Receive: nothing 
     // Return: nothing 
 
+    system("clear");
+
     string activityName;
+    string vortexName;
+    Vortex* vortexToAdd = nullptr;
+
+    std::cout << "Adding an activity to a place \n" << std::endl;
+    
+    std::cout << "Enter the name of the place: ";
+    std::getline(std::cin, vortexName);
+    
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            vortexToAdd = &vortex;
+            break;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return
+    if (vortexToAdd == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+    
+
     std::cout << "Enter the name of the activity: ";
     std::getline(std::cin, activityName);
 
@@ -459,34 +525,59 @@ void addActivity(Vortex& vortex) {
     if (it != activityList.end()) {
 
         // Check if the activity is already in the vortex
-        for (string* activity : vortex.activities) {
+        for (string* activity : vortexToAdd->activities) {
             if (*activity == *it) {
-                std::cout << "Activity " << activityName << " is already in " << vortex.name << std::endl;
+                std::cout << "Activity " << activityName << " is already in " << vortexToAdd->name << std::endl;
                 return;
             }
         }
 
-
         // Add the activity to the vortex 
-        vortex.activities.push_back(&(*it));
+        vortexToAdd->activities.push_back(&(*it));
         return;
     }
     
     std::cout << "Activity not found" << std::endl;
 }
 
-void removeActivity(Vortex& vortex) {
+void removeActivity() {
     // This function removes an activity from a vortex 
-    // Receive: a vortex 
+    // Receive: nothing
     // Return: nothing
 
+    system("clear");
+
+    string vortexName;
+    Vortex* vortexToRemove = nullptr;
+
     string activityName;
+
+    std::cout << "Removing an activity from a place \n" << std::endl;
+
+    std::cout << "Enter the name of the place: ";
+    std::getline(std::cin, vortexName);
+
+    // Find the vortex with the name entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            vortexToRemove = &vortex;
+            break;
+        }
+    }
+
+    // If the vortex was not found, print an error message and return 
+    if (vortexToRemove == nullptr) {
+        std::cout << "Invalid place" << std::endl;
+        return;
+    }
+
     std::cout << "Enter the name of the activity: ";
     std::getline(std::cin, activityName);
 
-    for (string* activity : vortex.activities) {
+    // Check if the activity is in the vortex and if it is, remove it
+    for (string* activity : vortexToRemove->activities) {
         if (*activity == activityName) {
-            vortex.activities.remove(activity);
+            vortexToRemove->activities.remove(activity);
             std::cout << "Activity removed" << std::endl;
             return;
         }
@@ -495,9 +586,9 @@ void removeActivity(Vortex& vortex) {
     std::cout << "Activity not found" << std::endl;
 }
 
-void modifyVortexActivities(Vortex& vortex) {
+void modifyVortexActivities() {
     // This function modifies the activities of a vortex 
-    // Receive: a vortex 
+    // Receive: nothing
     // Return: nothing
     
     bool exit = false; 
@@ -520,10 +611,10 @@ void modifyVortexActivities(Vortex& vortex) {
         }
         switch (option) {
         case 1:
-            addActivity(vortex);
+            addActivity();
             break;
         case 2:
-            removeActivity(vortex);
+            removeActivity();
             break;
         case 0:
             exit = true;
@@ -542,29 +633,9 @@ void modifyVortex() {
     // Receive: nothing
     // Return: nothing
 
-    Vortex* vortexToModify = nullptr;
-    string vortexName;
-    std::cout << "Enter the name of the place you want to modify: ";
-    std::getline(std::cin, vortexName);
-
-    // Find the vortex with the name entered by the user
-    for (Vortex& vortex : vortexList) {
-        if (vortex.name == vortexName) {
-            vortexToModify = &vortex;
-            break;
-        }
-    }
-
-    // If the vortex was not found, print an error message and return
-    if (vortexToModify == nullptr) {
-        std::cout << "Invalid place" << std::endl;
-        return;
-    }
-
-    std::cout << "Notice that if you want to modify vortex edges, you have to select Edges Menu" << std::endl;
-
     bool exit = false;
     system("clear");
+    std::cout << "Notice that if you want to modify the edges, you have to go to the edge menu" << std::endl;
 
     // Print the options to modify the vortex
     while (!exit) {
@@ -581,10 +652,10 @@ void modifyVortex() {
         // Execute the option selected by the user
         switch (option) {
         case 1:
-            modifyVortexName(*vortexToModify);
+            modifyVortexName();
             break;
         case 2:
-            modifyVortexActivities(*vortexToModify);
+            modifyVortexActivities();
             break;
         case 0:
             exit = true;
@@ -684,7 +755,8 @@ void amplitud() {
     // Receive: nothing
     // Return: nothing
     // (For the sake of clarity, it is called 'amplitud' and not 'Breadth-First Search')
-
+    
+    system("clear");
     std::cout << "Amplitud (BFS) traversal: " << std::endl;
 
     for (const Vortex& vortex : vortexList) {
@@ -706,8 +778,6 @@ void profundidad(Vortex* originVortex) {
         return;
     }
 
-    std::cout << "Visitando vértice: " << originVortex->name << std::endl;
-
     for (Vortex& vortex : vortexList) {
         if (vortex.name == originVortex->name) {
             vortex.visited = true;
@@ -715,7 +785,8 @@ void profundidad(Vortex* originVortex) {
     }
 
     for (Edge& edge : originVortex->edges) {
-        std::cout << "Visitando arista: " << edge << std::endl;
+        std::cout << originVortex->name << std::endl;
+        std::cout << "Now visiting: " << edge << std::endl;
         Vortex* neighbor = edge.destination;
         if (!neighbor->visited) {
             profundidad(neighbor);
@@ -771,70 +842,228 @@ void setVortex() {
     //setEdge();
     //edgeMenu();
     //modifyVortexName(vortex1);
-    //addActivity(vortex1);
+    addActivity();
     //modifyVortex();
-    findShortestPath("San Ramon", "Limon");
-    amplitud();
-    std::cout << std::endl;
-    uncheckGraph();
-    std::vector<Vortex*> visitedVertices;
-    Vortex firstVortex = vortexList.front();
-    std::cout << "Profundidad (DFS) traversal: " << std::endl;
-    profundidad(&firstVortex);
-    uncheckGraph();
+    //findShortestPath("San Ramon", "Limon");
+    //amplitud();
+    //std::cout << std::endl;
+    //uncheckGraph();
+    //std::vector<Vortex*> visitedVertices;
+    //Vortex firstVortex = vortexList.front();
+    //std::cout << "Profundidad (DFS) traversal: " << std::endl;
+    //profundidad(&firstVortex);
+    //uncheckGraph();
 }
 
+void calculateRoute() {
+    // This function calculates the shortest path between two vortexes if the activity is available in the destination 
+    // Receive: nothing
+    // Return: nothing
 
+    system("clear");
+    std::cout << "Calculating the route \n" << std::endl;
+
+    string startPoint;
+    string destination;
+    string activityToDo;
+
+    Vortex* originVortex = nullptr;
+    Vortex* targetVortex = nullptr;
+
+    bool activityInList = false;
+    bool activityInDestination = false;
+
+
+    std::cout << "Enter the starting point: ";
+    std::getline(std::cin, startPoint);
+
+    std::cout << "Enter the destination: ";
+    std::getline(std::cin, destination);
+
+    // Find the vortexes with the names entered by the user
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == startPoint) {
+            originVortex = &vortex;
+        }
+        if (vortex.name == destination) {
+            targetVortex = &vortex;
+        }
+    }
+
+    // If the vortexes were not found, print an error message and return
+    if (originVortex == nullptr || targetVortex == nullptr) {
+        std::cout << "Invalid starting point or destination" << std::endl;
+        return;
+    }
+
+    std::cout << "Enter the activity you want to do: ";
+    std::getline(std::cin, activityToDo);
+
+    // Check if the activity is in the list of activities
+    for (string activity : activityList) {
+        if (activity == activityToDo) {
+            activityInList = true;
+            break;
+        }
+    }
+
+    // If the activity is not in the list, print an error message and return
+    if (!activityInList) {
+        std::cout << "Invalid activity" << std::endl;
+        return;
+    }
+
+    // Check if the activity is in the destination
+    for (string* activity : targetVortex->activities) {
+        if (*activity == activityToDo) {
+            activityInDestination = true;
+            break;
+        }
+    }
+
+    // If the activity is not in the destination, print an error message (gives and advice) and return
+    if (!activityInDestination) {
+        std::cout << "The destination doesn't have that activity, maybe you can look for another place" << std::endl;
+        return;
+    }
+
+    // Call to findShortestPath function in order to find the shortest path between the vortexes
+    findShortestPath(startPoint, destination);
+    
+}
+
+void vortexMenu() {
+    // This function prints the vortex menu 
+    // Receive: nothing
+    // Return: nothing
+    
+    bool exit = false;
+    system("clear");
+    while (!exit) {
+    std::vector<string> options = {"Create Vortex", "Delete Vortex", "Modify Vortex"};
+    createMenu(options);
+    int option;
+    try {
+        std::cin >> option;
+        std::cin.ignore();
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+        return;
+    }
+
+    if (option < 0 || option > static_cast<int>(options.size())) {
+        std::cout << "Invalid option" << std::endl;
+        return;
+    }
+
+    switch (option) {
+    case 1:
+        createVortex();
+        break;
+    case 2:
+        deleteVortex();
+        break;
+    case 3:
+        modifyVortex();
+        break;
+    case 0:
+        exit = true;
+        break;
+    default:
+        std::cout << "Invalid option" << std::endl;
+        break;
+    }
+    }
+}
+
+void activityMenu() {
+    // This function prints the activity menu 
+    // Receive: nothing 
+    // Return: nothing 
+    
+    bool exit = false;
+    system("clear");
+    while (!exit) {
+        std::vector<string> options = {"Add activity", "Delete activity"};
+        createMenu(options);
+        int option;
+        try {
+            std::cin >> option;
+            std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        if (option < 0 || option > static_cast<int>(options.size())) {
+            std::cout << "Invalid option" << std::endl;
+            return;
+        }
+        switch (option) {
+        case 1:
+            addActivity();
+            break;
+        case 2:
+            removeActivity();
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
+    }
+
+
+}
 
 int main() {
+    setVortex();
     string dataFile = "Information/Data.bin";
     Person* list = nullptr;
     bool exit = false;
-    //while (!exit) {
-    //    system("clear");
-    //    std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options"};
-    //    createMenu(options);
-    //    int option;
-    //    std::cin >> option;
-    //    std::cin.ignore();
-    //    if (option < 0 || option > static_cast<int>(options.size())) {
-    //        std::cout << "Invalid option" << std::endl;
-    //        continue;
-    //    }
-    //    switch (option) {
-    //    case 1:
-    //        exit = true;
-    //        break;
-    //    case 2:
-    //        printGraph();
-    //        break;
-    //    case 3:
-    //       
-    //        break;
-    //    case 4:
-            // Vortex Options
-    //        break;
-    //    case 5:
-            // Edge Options
-    //        break;
-    //    case 6:
-            // Activity Options
-    //        break;
-    //    case 0:
-    //        exit = true;
-    //        break;
-    //    default:
-    //        std::cout << "Invalid option" << std::endl;
-    //    }
+    while (!exit) {
+        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options"};
+        createMenu(options);
+        int option;
+        std::cin >> option;
+        std::cin.ignore();
+        if (option < 0 || option > static_cast<int>(options.size())) {
+            std::cout << "Invalid option" << std::endl;
+            continue;
+        }
+        switch (option) {
+        case 1:
+            calculateRoute();
+            break;
+        case 2:
+            printGraph();
+            break;
+        case 3:
+           
+            break;
+        case 4:
+            vortexMenu();
+            break;
+        case 5:
+            edgeMenu();
+            break;
+        case 6:
+            activityMenu();
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+        }
 
         
-    //}
-    //size_t size = load(&list, "Information/Data.bin");
-    //for (size_t i = 0; i < size; i++) {
-    //    std::cout << list[i].gender << std::endl;
-    //}
-    setVortex();
-    std::cout << std::endl;
-    printGraph();
+    }
+    size_t size = load(&list, "Information/Data.bin");
+    for (size_t i = 0; i < size; i++) {
+        std::cout << list[i].gender << std::endl;
+    }
+
     return 0;
 }
