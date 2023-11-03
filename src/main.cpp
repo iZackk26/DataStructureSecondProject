@@ -696,32 +696,32 @@ void amplitud() {
     }
 }
 
-void profundidad(Vortex& originVortex, std::vector<Vortex*>& visitedVertices) {
-    // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph
-    // Receive: a pointer to a vortex and a vector of visited vertices
-    // Return: nothing
+void profundidad(Vortex* originVortex) {
+    // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph 
+    // Receive: a pointer to a vortex 
+    // Return: nothing 
     // (For the sake of clarity, it is called 'profundidad' and not 'Depth-First Search')
 
-    // If the vortex was already visited on this path, return
-    if (originVortex.visited) {
+    if (originVortex->visited) {
         return;
     }
 
-    std::cout << originVortex.name << ", destinations: ";
-    originVortex.visited = true;
-    visitedVertices.push_back(&originVortex);
+    std::cout << "Visitando vértice: " << originVortex->name << std::endl;
 
-    for (Edge& edge : originVortex.edges) {
-        std::cout << " (" << edge.distance << " -> " << edge.destination->name << ") ";
-        profundidad(*edge.destination, visitedVertices);
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == originVortex->name) {
+            vortex.visited = true;
+        }
     }
 
-    // After visiting all adjacent vertices, remove the current vortex from the vector 
-    visitedVertices.pop_back();
-
-    std::cout << std::endl;
+    for (Edge& edge : originVortex->edges) {
+        std::cout << "Visitando arista: " << edge << std::endl;
+        Vortex* neighbor = edge.destination;
+        if (!neighbor->visited) {
+            profundidad(neighbor);
+        }
+    }
 }
-
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -773,14 +773,14 @@ void setVortex() {
     //modifyVortexName(vortex1);
     //addActivity(vortex1);
     //modifyVortex();
-    //findShortestPath("San Ramon", "Limon");
+    findShortestPath("San Ramon", "Limon");
     amplitud();
     std::cout << std::endl;
     uncheckGraph();
     std::vector<Vortex*> visitedVertices;
     Vortex firstVortex = vortexList.front();
     std::cout << "Profundidad (DFS) traversal: " << std::endl;
-    profundidad(firstVortex, visitedVertices);
+    profundidad(&firstVortex);
     uncheckGraph();
 }
 
