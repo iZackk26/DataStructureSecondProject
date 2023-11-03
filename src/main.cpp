@@ -1013,8 +1013,52 @@ void activityMenu() {
             break;
         }
     }
+}
 
+void printGraphMenu() {
+    // This function prints the graph menu
+    // Receive: nothing
+    // Return: nothing
 
+    bool exit = false;
+    system("clear");
+    while (!exit) {
+        std::vector<string> options = {"Amplitud", "Profundidad", "Print Whole Graph"};
+        createMenu(options);
+        int option;
+        try {
+            std::cin >> option;
+            std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        if (option < 0 || option > static_cast<int>(options.size())) {
+            std::cout << "Invalid option" << std::endl;
+            return;
+        }
+        switch (option) {
+        case 1:
+            uncheckGraph();
+            amplitud();
+            uncheckGraph();
+            break;
+        case 2:
+            uncheckGraph();
+            profundidad(&vortexList.front());
+            uncheckGraph();
+            break;
+        case 3:
+            printGraph();
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
+    }
 }
 
 int main() {
@@ -1037,18 +1081,15 @@ int main() {
             calculateRoute();
             break;
         case 2:
-            printGraph();
+            printGraphMenu();
             break;
         case 3:
-           
-            break;
-        case 4:
             vortexMenu();
             break;
-        case 5:
+        case 4:
             edgeMenu();
             break;
-        case 6:
+        case 5:
             activityMenu();
             break;
         case 0:
