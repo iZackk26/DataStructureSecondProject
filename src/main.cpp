@@ -852,6 +852,57 @@ void setPeople(string fileName) {
     writeToFile(list, fileName, 5);
 }
 
+void appendGlobalActivity() {
+    // This function appends an activity to the global list of activities 
+    // Receive: nothing 
+    // Return: nothing 
+    
+    system("clear");
+    std::cout << "Appending an activity to the global list of activities \n" << std::endl;
+
+    string activityName;
+
+    std::cout << "Enter the name of the activity: ";
+    std::getline(std::cin, activityName);
+
+    // Check if the activity is already in the list 
+    for (string activity : activityList) {
+        if (activity == activityName) {
+            std::cout << "This activity is already in the list" << std::endl;
+            return;
+        }
+    } 
+
+    // Add the activity to the list 
+    activityList.push_back(activityName);
+
+}
+
+void deleteGlobalActivity() {
+    // This function deletes an activity from the global list of activities 
+    // Receive: nothing 
+    // Return: nothing 
+
+    system("clear");
+    std::cout << "Deleting an activity from the global list of activities \n" << std::endl;
+
+    string activityName;
+
+    std::cout << "Enter the name of the activity: ";
+    std::getline(std::cin, activityName);
+
+    // Check if the activity is in the list and if it is, delete it 
+    for (string activity : activityList) {
+        if (activity == activityName) {
+            activityList.remove(activity);
+            std::cout << "Activity removed" << std::endl;
+            return;
+        }
+    }
+
+    std::cout << "Activity not found" << std::endl;
+}
+
 void setGraph() {
     // This function creates the graph 
     // Receive: nothing 
@@ -1109,13 +1160,58 @@ void printGraphMenu() {
     }
 }
 
+void globalActivityMenu() {
+    // This function prints the global activity menu 
+    // Receive: nothing 
+    // Return: nothing 
+
+    bool exit = false;
+    system("clear");
+    while (!exit) {
+        std::vector<string> options = {"Append activity", "Delete activity", "Print activity list"};
+        createMenu(options);
+        int option;
+        try {
+            std::cin >> option;
+            std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        if (option < 0 || option > static_cast<int>(options.size())) {
+            std::cout << "Invalid option" << std::endl;
+            return;
+        }
+        switch (option) {
+        case 1:
+            appendGlobalActivity();
+            break;
+        case 2:
+            deleteGlobalActivity();
+            break;
+        case 3:
+            std::cout << "Global activity list: " << std::endl;
+            for (string activity : activityList) {
+                std::cout << activity << std::endl;
+            }
+            break;
+        case 0:
+            exit = true;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+        }
+    }
+}
+
 int main() {
     setGraph();
     string dataFile = "Information/Data.bin";
     Person* list = nullptr;
     bool exit = false;
     while (!exit) {
-        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options"};
+        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options"};
         createMenu(options);
         int option;
         std::cin >> option;
@@ -1139,6 +1235,9 @@ int main() {
             break;
         case 5:
             activityMenu();
+            break;
+        case 6:
+            globalActivityMenu();
             break;
         case 0:
             exit = true;
