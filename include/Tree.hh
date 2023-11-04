@@ -6,11 +6,9 @@
 
 using std::string;
 
-class Tree{
+class Tree{ 
     public:
-        int quantity; // Cantidad
         string clasification; // Tipo de clasificacion
-        int age; // Edad
         std::list<Tree*> children; // Lista de hijos
 
         // List of people
@@ -18,8 +16,11 @@ class Tree{
 
         // Constructor
         Tree(int quantity, string clasification);
+        Tree();
 
         // Add child
         void addChild(Tree* child);
+
+        bool checkRepeteatedClasification(string clasification);
 
 };

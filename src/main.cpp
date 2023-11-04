@@ -14,8 +14,8 @@
 using std::string;
 std::list<Vortex> vortexList;
 std::list<string> activityList;
-Tree *tree;
-
+Tree* PeopleTree = new Tree();
+Person* peopleList = nullptr;
 
 // This function opens a file and append information to it in binary mode
 // Receives: a person object and the file name
@@ -90,7 +90,8 @@ void printGraph() {
             std::cout << *activity << " ";
         }
 
-        std::cout << "\n" << std::endl;
+        std::cout << "\n"
+                  << std::endl;
     }
 }
 
@@ -842,6 +843,105 @@ void profundidad(Vortex* originVortex) {
     }
 }
 
+void printTree(Tree *root) {
+    if (root == nullptr) {
+        return;
+    }
+    for (Tree *child : root->children) {
+        std::cout << child->clasification << std::endl;
+    }
+    /* for (Tree *child : root->children) { */
+    /*     printTree(child); */
+    /* } */
+}
+
+// This function adds a person to the tree
+// Receive: nothing
+// Return: nothing
+void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree* root) {
+    if (sortingChoices.empty() || root == nullptr) {
+        return;
+    }
+    if (sortingChoices[0] == 1) {
+        std::cout << "Case1 " << std::endl;
+        std::cout << root->checkRepeteatedClasification(person.gender) << std::endl;
+        std::cout << person.gender;
+        for (Tree *child : root->children) {
+            std::cout << child->clasification << std::endl;
+        }
+        if (root->checkRepeteatedClasification(person.gender)) {
+            buildNodeForThisPerson(person, sortingChoices, root);
+            sortingChoices.erase(sortingChoices.begin());
+            return;
+        }
+        Tree *newNode = new Tree();
+        newNode->clasification = person.gender;
+        root->addChild(newNode);
+        sortingChoices.erase(sortingChoices.begin());
+        buildNodeForThisPerson(person, sortingChoices, newNode);
+        return;
+    }
+    if (sortingChoices[0] == 2) {
+        std::cout << "Case2 " << std::endl;
+        std::cout << root->checkRepeteatedClasification(std::to_string(person.age)) << std::endl;
+        std::cout << person.age;
+        for (Tree *child : root->children) {
+            std::cout << child->clasification << std::endl;
+        }
+        if (root->checkRepeteatedClasification(std::to_string(person.age))) {
+            buildNodeForThisPerson(person, sortingChoices, root);
+            sortingChoices.erase(sortingChoices.begin());
+            return;
+        }
+        Tree *newNode = new Tree();
+        newNode->clasification = person.age;
+        root->addChild(newNode);
+        sortingChoices.erase(sortingChoices.begin());
+        buildNodeForThisPerson(person, sortingChoices, newNode);
+        return;
+
+    }
+    if (sortingChoices[0] == 3) {
+        std::cout << "Case3 " << std::endl;
+        std::cout << root->checkRepeteatedClasification(person.beginingRute) << std::endl;
+        std::cout << person.beginingRute;
+        for (Tree *child : root->children) {
+            std::cout << child->clasification << std::endl;
+        }
+        if (root->checkRepeteatedClasification(person.beginingRute)) {
+            buildNodeForThisPerson(person, sortingChoices, root);
+            sortingChoices.erase(sortingChoices.begin());
+            return;
+        }
+        Tree *newNode = new Tree();
+        newNode->clasification = person.beginingRute;
+        root->addChild(newNode);
+        sortingChoices.erase(sortingChoices.begin());
+        buildNodeForThisPerson(person, sortingChoices, newNode);
+        return;
+    }
+    if (sortingChoices[0] == 4) {
+        std::cout << "Case4 " << std::endl;
+        std::cout << root->checkRepeteatedClasification(person.activity) << std::endl;
+        std::cout << person.activity;
+        for (Tree *child : root->children) {
+            std::cout << child->clasification << std::endl;
+        }
+        if (root->checkRepeteatedClasification(person.activity)) {
+            buildNodeForThisPerson(person, sortingChoices, root);
+            sortingChoices.erase(sortingChoices.begin());
+            return;
+        }
+        Tree *newNode = new Tree();
+        newNode->clasification = person.activity;
+        root->addChild(newNode);
+        sortingChoices.erase(sortingChoices.begin());
+        buildNodeForThisPerson(person, sortingChoices, newNode);
+        return;
+    }
+
+}
+
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
     Person p2("Female", 19, "Heredia", "Alajuela", "Comer");
@@ -882,7 +982,6 @@ void deleteGlobalActivity() {
     // This function deletes an activity from the global list of activities 
     // Receive: nothing 
     // Return: nothing 
-
     system("clear");
     std::cout << "Deleting an activity from the global list of activities \n" << std::endl;
 
@@ -1049,11 +1148,23 @@ void vortexMenu() {
         std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
         return;
     }
+    }
+}
 
+void OrderTree(size_t sizeOfList) {
+
+    std::vector<string> options = {"Order Tree", "Print Tree"};
+    std::vector<string> sorting = {"Gender", "Age", "Place of residence", "Activity"};
+    std::vector<int> sortingChoices;
+    createMenu(options);
+    int option;
+    std::cin >> option;
+    std::cin.ignore();
     if (option < 0 || option > static_cast<int>(options.size())) {
         std::cout << "Invalid option" << std::endl;
         return;
     }
+
 
     switch (option) {
     case 1:
@@ -1066,12 +1177,11 @@ void vortexMenu() {
         modifyVortex();
         break;
     case 0:
-        exit = true;
+        /* exit = true; */
         break;
     default:
         std::cout << "Invalid option" << std::endl;
         break;
-    }
     }
 }
 
@@ -1208,8 +1318,9 @@ void globalActivityMenu() {
 int main() {
     setGraph();
     string dataFile = "Information/Data.bin";
-    Person* list = nullptr;
     bool exit = false;
+    setPeople(dataFile);
+    size_t size = load(&peopleList, "Information/Data.bin");
     while (!exit) {
         std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options"};
         createMenu(options);
@@ -1238,6 +1349,7 @@ int main() {
             break;
         case 6:
             globalActivityMenu();
+            // Calculate Route
             break;
         case 0:
             exit = true;
@@ -1245,13 +1357,8 @@ int main() {
         default:
             std::cout << "Invalid option" << std::endl;
         }
+    }
 
-        
-    }
-    size_t size = load(&list, "Information/Data.bin");
-    for (size_t i = 0; i < size; i++) {
-        std::cout << list[i].gender << std::endl;
-    }
 
     return 0;
 }
