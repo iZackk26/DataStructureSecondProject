@@ -326,6 +326,54 @@ void setEdge() {
     std::cout << "Invalid destination" << std::endl;
 }
 
+void setTrunkEdge(const std::string& originVortexName, const std::string& destinationVortexName, int distance) {
+    // This function creates an edge between two vortexes based on their names
+    // Receive: originVortexName (name of the origin vortex), destinationVortexName (name of the destination vortex), distance
+    // Return: nothing
+
+    Vortex* originVortex = nullptr;
+
+    // Find the vortex with the name entered as the origin vortex
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == originVortexName) {
+            originVortex = &vortex;
+            break;
+        }
+    }
+
+    // If the origin vortex was not found, print an error message and return
+    if (originVortex == nullptr) {
+        std::cout << "Invalid starting address" << std::endl;
+        return;
+    }
+
+    Vortex* destinationVortex = nullptr;
+
+    // Find the vortex with the name entered as the destination vortex
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == destinationVortexName) {
+            destinationVortex = &vortex;
+            break;
+        }
+    }
+
+    // If the destination vortex was not found, print an error message and return
+    if (destinationVortex == nullptr) {
+        std::cout << "Invalid destination" << std::endl;
+        return;
+    }
+
+    // Ensure that the distance is valid
+    if (distance <= 0) {
+        std::cout << "Invalid distance" << std::endl;
+        return;
+    }
+
+    Edge edge(distance, destinationVortex);
+    addEdge(edge, originVortex);
+}
+
+
 void edgeMenu() {
     // This function prints the edge menu
     // Receive: nothing
@@ -804,55 +852,55 @@ void setPeople(string fileName) {
     writeToFile(list, fileName, 5);
 }
 
-void setVortex() {
-    Vortex vortex1("San Ramon");
-    Vortex vortex2("Liberia");
-    Vortex vortex3("Grecia");
-    Vortex vortex4("Palmares");
-    Vortex vortex5("San Jose");
-    Vortex vortex6("Alajuela");
-    Vortex vortex7("Heredia");
-    Vortex vortex8("Cartago");
-    Vortex vortex9("Puntarenas");
-    Vortex vortex10("Limon");
-    Vortex vortex11("Santa Clara");
-    vortexList.push_back(vortex1);
-    vortexList.push_back(vortex2);
-    vortexList.push_back(vortex3);
-    vortexList.push_back(vortex4);
-    vortexList.push_back(vortex5);
-    vortexList.push_back(vortex6);
-    vortexList.push_back(vortex7);
-    vortexList.push_back(vortex8);
-    vortexList.push_back(vortex9);
-    vortexList.push_back(vortex10);
-    vortexList.push_back(vortex11);
-    string activity1 = "Comer";
-    string activity2 = "Dormir";
-    string activity3 = "Estudiar";
+void setGraph() {
+    // This function creates the graph 
+    // Receive: nothing 
+    // Return: nothing
 
-    activityList.push_back(activity1);
-    activityList.push_back(activity2);
-    activityList.push_back(activity3);
-    setEdge();
-    setEdge();
-    setEdge();
-    //setEdge();
-    //setEdge();
-    //setEdge();
-    //edgeMenu();
-    //modifyVortexName(vortex1);
-    addActivity();
-    //modifyVortex();
-    //findShortestPath("San Ramon", "Limon");
-    //amplitud();
-    //std::cout << std::endl;
-    //uncheckGraph();
-    //std::vector<Vortex*> visitedVertices;
-    //Vortex firstVortex = vortexList.front();
-    //std::cout << "Profundidad (DFS) traversal: " << std::endl;
-    //profundidad(&firstVortex);
-    //uncheckGraph();
+    Vortex moncho("San Ramon");
+    Vortex palmares("Palmares");
+    Vortex naranjo("Naranjo");
+    Vortex grecia("Grecia");
+    Vortex alajuela("Alajuela");
+    Vortex poas("Poas");
+    Vortex cq("Ciudad Quesada");
+    Vortex fortuna("Fortuna");
+    Vortex liberia("Liberia");
+    Vortex puntarenas("Puntarenas");
+
+    vortexList.push_back(moncho);
+    vortexList.push_back(palmares);
+    vortexList.push_back(naranjo);
+    vortexList.push_back(grecia);
+    vortexList.push_back(alajuela);
+    vortexList.push_back(poas);
+    vortexList.push_back(cq);
+    vortexList.push_back(fortuna);
+    vortexList.push_back(liberia);
+    vortexList.push_back(puntarenas);
+
+    setTrunkEdge("Liberia", "Puntarenas", 136); //1
+    setTrunkEdge("Liberia", "Fortuna", 135); //2
+    setTrunkEdge("Liberia", "San Ramon", 162); //3
+    setTrunkEdge("San Ramon", "Fortuna", 71); //4
+    setTrunkEdge("San Ramon", "Puntarenas", 54); //5
+    setTrunkEdge("San Ramon", "Palmares", 8); //6
+    setTrunkEdge("San Ramon", "Naranjo", 22); //7 
+    setTrunkEdge("San Ramon", "Ciudad Quesada", 37); //8
+    setTrunkEdge("Palmares", "Puntarenas", 59); //9
+    setTrunkEdge("Palmares", "Naranjo", 19); //10
+    setTrunkEdge("Palmares", "Grecia", 27); //11
+    setTrunkEdge("Palmares", "Alajuela", 40); //12 
+    setTrunkEdge("Fortuna", "Ciudad Quesada", 45); //13
+    setTrunkEdge("Ciudad Quesada", "Naranjo", 40); //14
+    setTrunkEdge("Ciudad Quesada", "Poas", 80); //15 
+    setTrunkEdge("Naranjo", "Grecia", 16); //16
+    setTrunkEdge("Naranjo", "Poas", 27); //17
+    setTrunkEdge("Grecia", "Poas", 15); //18
+    setTrunkEdge("Grecia", "Alajuela", 20); //19
+    setTrunkEdge("Poas", "Alajuela", 18); //20
+
+ 
 }
 
 void calculateRoute() {
@@ -1062,7 +1110,7 @@ void printGraphMenu() {
 }
 
 int main() {
-    setVortex();
+    setGraph();
     string dataFile = "Information/Data.bin";
     Person* list = nullptr;
     bool exit = false;
