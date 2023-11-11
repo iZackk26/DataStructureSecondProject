@@ -15,7 +15,7 @@ class Tree{
         std::list<int*> filePosition; // Lista de posiciones en el archivo
 
         // Constructor
-        Tree(int quantity, string clasification);
+        Tree(string clasification);
         Tree();
 
         // Add child

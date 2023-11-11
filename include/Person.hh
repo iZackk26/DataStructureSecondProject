@@ -9,7 +9,7 @@ class Person{
     public:
         char gender[10];
         int age;
-        char beginingRute[30];
+        char beginingRoute[30];
         char endRute[30];
         char activity[20];
 
@@ -18,12 +18,12 @@ class Person{
         Person();
 
         friend std::ostream& operator<<(std::ostream& os, const Person& p){
-            os << p.gender << " " << p.age << " " << p.beginingRute << " " << p.endRute << " " << p.activity;
+            os << p.gender << " " << p.age << " " << p.beginingRoute << " " << p.endRute << " " << p.activity;
             return os;
         }
 
         friend std::istream& operator>>(std::istream& is, Person& p){
-            is >> p.gender >> p.age >> p.beginingRute >> p.endRute >> p.activity;
+            is >> p.gender >> p.age >> p.beginingRoute >> p.endRute >> p.activity;
             return is;
         }
 

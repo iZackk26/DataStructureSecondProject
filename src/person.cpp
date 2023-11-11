@@ -5,10 +5,10 @@
 
 using std::string;
 
-Person::Person(const char* gender, int age, const char* beginingRute, const char* endRute, const char* activity) {
+Person::Person(const char* gender, int age, const char* beginingRoute, const char* endRute, const char* activity) {
     strncpy(this->gender, gender, sizeof(this->gender));
     this->age = age; 
-    strncpy(this->beginingRute, beginingRute, sizeof(this->beginingRute));
+    strncpy(this->beginingRoute, beginingRoute, sizeof(this->beginingRoute));
     strncpy(this->endRute, endRute, sizeof(this->endRute));
     strncpy(this->activity, activity, sizeof(this->activity));
 }

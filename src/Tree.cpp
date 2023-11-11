@@ -6,7 +6,7 @@
 using std::string;
 
 // Constructor
-Tree::Tree(int quantity, string clasification){
+Tree::Tree(string clasification){
     this->clasification = clasification;
 }
 
@@ -23,10 +23,8 @@ Tree::Tree(){
 
 bool Tree::checkRepeteatedClasification(string clasification){
     for (Tree* child : this->children){
-        std::cout << "clasification inside Check" <<clasification << std::endl;
-        std::cout << "Child clasification" << child->clasification << std::endl;
-        std::cout << "COMPARE" << clasification.compare(child->clasification) << std::endl;
-        if (child->clasification.compare(clasification) == 0){
+        std::cout << child->clasification << std::endl;
+        if (child->clasification.compare(clasification) == 0 || child->clasification.empty()){
             return true;
         }
     }

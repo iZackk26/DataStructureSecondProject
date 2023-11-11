@@ -14,7 +14,7 @@
 using std::string;
 std::list<Vortex> vortexList;
 std::list<string> activityList;
-Tree* PeopleTree = new Tree();
+Tree* peopleTree = new Tree();
 Person* peopleList = nullptr;
 
 // This function opens a file and append information to it in binary mode
@@ -847,110 +847,86 @@ void profundidad(Vortex* originVortex) {
     }
 }
 
-void printTree(Tree* root) {
+void printTree(Tree* root, int level) {
     if (root == nullptr) {
         return;
     }
+    std::cout << "Nivel: " << level << std::endl;
+    std::cout << root->clasification << std::endl;
     for (Tree* child : root->children) {
-        std::cout << child->clasification << std::endl;
+        printTree(child, level + 1);
     }
-    /* for (Tree *child : root->children) { */
-    /*     printTree(child); */
-    /* } */
 }
 
 // This function adds a person to the tree
 // Receive: nothing
 // Return: nothing
-void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree* root) {
+//
+enum Option {
+
+    GENDER = 1,
+    AGE = 2,
+    PLACE_OF_RESIDENCE = 3,
+    ACTIVITY = 4
+};
+
+void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, Tree* root) {
     if (sortingChoices.empty() || root == nullptr) {
         return;
-    }
-    if (sortingChoices[0] == 1) {
-        std::cout << "Case1 " << std::endl;
-        std::cout << root->checkRepeteatedClasification(person.gender) << std::endl;
-        std::cout << person.gender;
+    } else if (sortingChoices[0] == GENDER) {
+        // Root -> null
+        // Genero
+        // root->children
         for (Tree* child : root->children) {
-            std::cout << child->clasification << std::endl;
+            if (child->clasification.compare(person->gender) == 0) {
+                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
+                return;
+            }
         }
-        if (root->checkRepeteatedClasification(person.gender)) {
-            buildNodeForThisPerson(person, sortingChoices, root);
-            sortingChoices.erase(sortingChoices.begin());
-            return;
-        }
-        Tree* newNode = new Tree();
-        newNode->clasification = person.gender;
-        root->addChild(newNode);
-        sortingChoices.erase(sortingChoices.begin());
-        buildNodeForThisPerson(person, sortingChoices, newNode);
-        return;
-    }
-    if (sortingChoices[0] == 2) {
-        std::cout << "Case2 " << std::endl;
-        std::cout << root->checkRepeteatedClasification(std::to_string(person.age)) << std::endl;
-        std::cout << person.age;
+        Tree* node = new Tree(person->gender);
+        root->children.push_back(node);
+        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+
+    
+    } else if (sortingChoices[0] == AGE) {
         for (Tree* child : root->children) {
-            std::cout << child->clasification << std::endl;
+            if (child->clasification.compare(std::to_string(person->age)) == 0) {
+                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
+                return;
+            }
         }
-        if (root->checkRepeteatedClasification(std::to_string(person.age))) {
-            buildNodeForThisPerson(person, sortingChoices, root);
-            sortingChoices.erase(sortingChoices.begin());
-            return;
-        }
-        Tree* newNode = new Tree();
-        newNode->clasification = person.age;
-        root->addChild(newNode);
-        sortingChoices.erase(sortingChoices.begin());
-        buildNodeForThisPerson(person, sortingChoices, newNode);
-        return;
-    }
-    if (sortingChoices[0] == 3) {
-        std::cout << "Case3 " << std::endl;
-        std::cout << root->checkRepeteatedClasification(person.beginingRute) << std::endl;
-        std::cout << person.beginingRute;
+        Tree* node = new Tree(std::to_string(person->age));
+        root->children.push_back(node);
+        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+    } else if (sortingChoices[0] == PLACE_OF_RESIDENCE) {
         for (Tree* child : root->children) {
-            std::cout << child->clasification << std::endl;
+            if (child->clasification.compare(person->beginingRoute) == 0) {
+                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
+                return;
+            }
         }
-        if (root->checkRepeteatedClasification(person.beginingRute)) {
-            buildNodeForThisPerson(person, sortingChoices, root);
-            sortingChoices.erase(sortingChoices.begin());
-            return;
-        }
-        Tree* newNode = new Tree();
-        newNode->clasification = person.beginingRute;
-        root->addChild(newNode);
-        sortingChoices.erase(sortingChoices.begin());
-        buildNodeForThisPerson(person, sortingChoices, newNode);
-        return;
-    }
-    if (sortingChoices[0] == 4) {
-        std::cout << "Case4 " << std::endl;
-        std::cout << root->checkRepeteatedClasification(person.activity) << std::endl;
-        std::cout << person.activity;
+        Tree* node = new Tree(person->beginingRoute);
+        root->children.push_back(node);
+        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+    } else if (sortingChoices[0] == ACTIVITY) {
         for (Tree* child : root->children) {
-            std::cout << child->clasification << std::endl;
+            if (child->clasification.compare(person->activity) == 0) {
+                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
+                return;
+            }
         }
-        if (root->checkRepeteatedClasification(person.activity)) {
-            buildNodeForThisPerson(person, sortingChoices, root);
-            sortingChoices.erase(sortingChoices.begin());
-            return;
-        }
-        Tree* newNode = new Tree();
-        newNode->clasification = person.activity;
-        root->addChild(newNode);
-        sortingChoices.erase(sortingChoices.begin());
-        buildNodeForThisPerson(person, sortingChoices, newNode);
-        return;
     }
+    Tree* node = new Tree(person->activity);
+    root->children.push_back(node);
+    buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+
 }
 
 void registerUser() {
     // This function registers a user
-    Person person = Person();
+    /* Person person = Person(); */
     std::cout << "Type your gender: ";
 }
-
-
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -1133,7 +1109,7 @@ void calculateRoute() {
         std::cout << "The destination doesn't have that activity, maybe you can look for another place" << std::endl;
         return;
     }
-    // ** CALL HERE FOR THE CREATION OF THE PERSON INFORMATION ** 
+    // ** CALL HERE FOR THE CREATION OF THE PERSON INFORMATION **
 
     // Call to findShortestPath function in order to find the shortest path between the vortexes
     findShortestPath(startPoint, destination);
@@ -1177,10 +1153,31 @@ void vortexMenu() {
     }
 }
 
-void OrderTree(size_t sizeOfList) {
+void setOptions() {
+    std::vector<string> sortingOption = {"Gender", "Age", "Place of residence", "Activity"};
+    std::vector<Option> sortingChoices;
+    size_t size = load(&peopleList, "Information/Data.bin");
+    createMenu(sortingOption);
+    for (size_t i = 0; i < sortingOption.size(); i++) {
+        int choice;
+        std::cin >> choice;
+        std::cin.ignore();
+        if (choice < 0 || choice > static_cast<int>(sortingOption.size())) {
+            std::cout << "Invalid option" << std::endl;
+            return;
+        }
+        /* sortingChoices.push_back(&choice); */
+        sortingChoices.push_back((Option)choice);
+    }
+
+    for (size_t i = 0; i < size; i++) {
+        buildNodeForThisPerson(&peopleList[i], sortingChoices, peopleTree);
+    }
+}
+
+void orderTree() {
 
     std::vector<string> options = {"Order Tree", "Print Tree"};
-    std::vector<string> sorting = {"Gender", "Age", "Place of residence", "Activity"};
     std::vector<int> sortingChoices;
     createMenu(options);
     int option;
@@ -1190,16 +1187,15 @@ void OrderTree(size_t sizeOfList) {
         std::cout << "Invalid option" << std::endl;
         return;
     }
-
     switch (option) {
     case 1:
-        createVortex();
+        setOptions();
         break;
     case 2:
-        deleteVortex();
+        printTree(peopleTree, 1);
         break;
     case 3:
-        modifyVortex();
+        std::cout << "JUE" << std::endl;
         break;
     case 0:
         /* exit = true; */
@@ -1345,9 +1341,8 @@ int main() {
     string dataFile = "Information/Data.bin";
     bool exit = false;
     setPeople(dataFile);
-    /* size_t size = load(&peopleList, "Information/Data.bin"); */
     while (!exit) {
-        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options"};
+        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options", "Order Tree"};
         createMenu(options);
         int option;
         std::cin >> option;
@@ -1374,6 +1369,9 @@ int main() {
             break;
         case 6:
             globalActivityMenu();
+        case 7:
+            /* orderTree(size); */
+            orderTree();
             // Calculate Route
             break;
         case 0:
