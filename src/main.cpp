@@ -874,15 +874,16 @@ void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, 
     if (sortingChoices.empty() || root == nullptr) {
         return;
     } else if (sortingChoices[0] == GENDER) {
-        // Root -> null
-        // Genero
-        // root->children
+
         for (Tree* child : root->children) {
-            if (child->clasification.compare(person->gender) == 0) {
+            std::cout << "Child de for: " << child->clasification << std::endl;
+            if (child->clasification == person->gender) {
+                std::cout << "Repetido dentro del if" << std::endl;
                 buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
                 return;
             }
         }
+        std::cout << "No repetido dentro del if" << std::endl;
         Tree* node = new Tree(person->gender);
         root->children.push_back(node);
         buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
@@ -890,7 +891,7 @@ void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, 
     
     } else if (sortingChoices[0] == AGE) {
         for (Tree* child : root->children) {
-            if (child->clasification.compare(std::to_string(person->age)) == 0) {
+            if (child->clasification == std::to_string(person->age)) {
                 buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
                 return;
             }
@@ -898,9 +899,10 @@ void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, 
         Tree* node = new Tree(std::to_string(person->age));
         root->children.push_back(node);
         buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+
     } else if (sortingChoices[0] == PLACE_OF_RESIDENCE) {
         for (Tree* child : root->children) {
-            if (child->clasification.compare(person->beginingRoute) == 0) {
+            if (child->clasification == person->beginingRoute) {
                 buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
                 return;
             }
@@ -908,18 +910,18 @@ void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, 
         Tree* node = new Tree(person->beginingRoute);
         root->children.push_back(node);
         buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+
     } else if (sortingChoices[0] == ACTIVITY) {
         for (Tree* child : root->children) {
-            if (child->clasification.compare(person->activity) == 0) {
+            if (child->clasification == person->activity) {
                 buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
                 return;
             }
         }
+        Tree* node = new Tree(person->activity);
+        root->children.push_back(node);
+        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
     }
-    Tree* node = new Tree(person->activity);
-    root->children.push_back(node);
-    buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
-
 }
 
 void registerUser() {

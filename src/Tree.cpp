@@ -8,6 +8,8 @@ using std::string;
 // Constructor
 Tree::Tree(string clasification){
     this->clasification = clasification;
+    this->children = std::list<Tree*>();
+    this->filePosition = std::list<int*>();
 }
 
 void Tree::addChild(Tree* child){
