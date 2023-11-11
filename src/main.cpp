@@ -2,6 +2,7 @@
 #include <Edge.hh>
 #include <Person.hh>
 #include <Vortex.hh>
+#include <algorithm>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
@@ -9,7 +10,6 @@
 #include <set>
 #include <string>
 #include <vector>
-#include <algorithm>
 
 using std::string;
 std::list<Vortex> vortexList;
@@ -63,9 +63,10 @@ void printGraph() {
     // This function prints the entire graph
     // Receive: nothing
     // Return: nothing
-    
+
     system("clear");
-    std::cout << "Graph: \n" << std::endl;
+    std::cout << "Graph: \n"
+              << std::endl;
 
     for (Vortex& vortex : vortexList) {
         std::cout << vortex << ", edges: ";
@@ -105,14 +106,14 @@ void uncheckGraph() {
     }
 }
 
-void addEdge(Edge& edge, Vortex* vortex)  {
-    //This method receive an edge and the pointer to the origin vortex, then add it to the vortexList, also add the bi-directional edge
-    //Receive: an edge 
-    //Return: void
-    
-    vortex->edges.push_back(edge); //This add the edge to the origin vortex
+void addEdge(Edge& edge, Vortex* vortex) {
+    // This method receive an edge and the pointer to the origin vortex, then add it to the vortexList, also add the bi-directional edge
+    // Receive: an edge
+    // Return: void
 
-    //This loop add the edge to the destination vortex but the destination will be the origin vortex
+    vortex->edges.push_back(edge); // This add the edge to the origin vortex
+
+    // This loop add the edge to the destination vortex but the destination will be the origin vortex
     for (Vortex& vortexIterator : vortexList) {
         if (vortexIterator.name == edge.destination->name) {
             Edge returnEdge(edge.distance, vortex);
@@ -127,7 +128,8 @@ void deleteEdge() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Deleting an edge \n" << std::endl;
+    std::cout << "Deleting an edge \n"
+              << std::endl;
 
     string vortexName;
     string EdgeName;
@@ -146,7 +148,7 @@ void deleteEdge() {
             auto edgeIt = vortex.edges.begin();
             while (edgeIt != vortex.edges.end()) {
                 if (edgeIt->destination->name == EdgeName) {
-                    vortex.edges.remove(*edgeIt); //If it founds the edge, it will delete it
+                    vortex.edges.remove(*edgeIt); // If it founds the edge, it will delete it
                     std::cout << "Edge removed" << std::endl;
                     break;
                 } else {
@@ -156,14 +158,14 @@ void deleteEdge() {
             std::cout << "Invalid destination" << std::endl;
         }
     }
-    
+
     // If the vortex was not found, print an error message and return
     if (destinationVortex == nullptr) {
         std::cout << "Invalid place" << std::endl;
         return;
     }
-    
-    //This loop delete the edge from the destination vortex
+
+    // This loop delete the edge from the destination vortex
     for (Vortex& vortex : vortexList) {
         if (vortex.name == EdgeName) {
             auto edgeIt = vortex.edges.begin();
@@ -186,7 +188,8 @@ void modifyEdge() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Modifying an edge \n" << std::endl;
+    std::cout << "Modifying an edge \n"
+              << std::endl;
 
     string vortexName;
     string EdgeName;
@@ -195,8 +198,9 @@ void modifyEdge() {
 
     try {
         std::cout << "Enter the name of the place you want to modify the edge: ";
+
         std::getline(std::cin, vortexName);
-    
+
         std::cout << "Those are the edges of this place: " << std::endl;
         for (Vortex& vortex : vortexList) {
             if (vortex.name == vortexName) {
@@ -210,7 +214,6 @@ void modifyEdge() {
         std::cout << "Enter the destination of the edge you want to modify: ";
         std::getline(std::cin, EdgeName);
 
-
         std::cout << "Enter the new destination distance: ";
         std::cin >> newDistance;
         std::cin.ignore();
@@ -220,9 +223,9 @@ void modifyEdge() {
             return;
         }
 
-        } catch (const std::invalid_argument& e) {
-            std::cerr << "Invalid input for distance. Please enter a valid numeric value." << std::endl;
-            return;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Invalid input for distance. Please enter a valid numeric value." << std::endl;
+        return;
     }
 
     // Find the vortex with the name entered by the user
@@ -243,13 +246,13 @@ void modifyEdge() {
         }
     }
 
-    // If the vortex was not found, print an error message and return 
+    // If the vortex was not found, print an error message and return
     if (destinationVortex == nullptr) {
         std::cout << "Invalid place" << std::endl;
         return;
     }
 
-    //This loop modify the edge from the destination vortexes
+    // This loop modify the edge from the destination vortexes
     for (Vortex& vortex : vortexList) {
         if (vortex.name == EdgeName) {
             auto edgeIt = vortex.edges.begin();
@@ -272,7 +275,8 @@ void setEdge() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Creating an edge between two places \n" << std::endl;
+    std::cout << "Creating an edge between two places \n"
+              << std::endl;
 
     int distance;
     Vortex* originVortex = nullptr;
@@ -374,7 +378,6 @@ void setTrunkEdge(const std::string& originVortexName, const std::string& destin
     addEdge(edge, originVortex);
 }
 
-
 void edgeMenu() {
     // This function prints the edge menu
     // Receive: nothing
@@ -386,15 +389,15 @@ void edgeMenu() {
         createMenu(options);
         int option;
         try {
-        std::cin >> option;
-        std::cin.ignore();
+            std::cin >> option;
+            std::cin.ignore();
         } catch (const std::invalid_argument& e) {
             std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
             return;
         }
         if (option < 0 || option > static_cast<int>(options.size())) {
-        std::cout << "Invalid option" << std::endl;
-        return;
+            std::cout << "Invalid option" << std::endl;
+            return;
         }
         switch (option) {
         case 1:
@@ -422,7 +425,8 @@ void createVortex() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Creating a place \n" << std::endl;
+    std::cout << "Creating a place \n"
+              << std::endl;
 
     string vortexName;
 
@@ -447,7 +451,8 @@ void deleteVortex() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Deleting a place \n" << std::endl;
+    std::cout << "Deleting a place \n"
+              << std::endl;
 
     string vortexName;
     Vortex* vortexToDelete = nullptr;
@@ -486,17 +491,18 @@ void deleteVortex() {
 }
 
 void modifyVortexName() {
-    // This function modifies the name of a vortex 
+    // This function modifies the name of a vortex
     // Receive: nothing
     // Return: nothing
-    
+
     system("clear");
-    std::cout << "Modifying the name of a place \n" << std::endl;
+    std::cout << "Modifying the name of a place \n"
+              << std::endl;
 
     string vortexName;
     string newName;
     Vortex* vortexToModify = nullptr;
-    
+
     std::cout << "Enter the name of the place you want to modify: ";
     std::getline(std::cin, vortexName);
 
@@ -508,7 +514,7 @@ void modifyVortexName() {
         }
     }
 
-    // If the vortex was not found, print an error message and return 
+    // If the vortex was not found, print an error message and return
     if (vortexToModify == nullptr) {
         std::cout << "Invalid place" << std::endl;
         return;
@@ -535,9 +541,9 @@ void modifyVortexName() {
 }
 
 void addActivity() {
-    // This function adds an activity to a vortex 
-    // Receive: nothing 
-    // Return: nothing 
+    // This function adds an activity to a vortex
+    // Receive: nothing
+    // Return: nothing
 
     system("clear");
 
@@ -545,11 +551,12 @@ void addActivity() {
     string vortexName;
     Vortex* vortexToAdd = nullptr;
 
-    std::cout << "Adding an activity to a place \n" << std::endl;
-    
+    std::cout << "Adding an activity to a place \n"
+              << std::endl;
+
     std::cout << "Enter the name of the place: ";
     std::getline(std::cin, vortexName);
-    
+
     // Find the vortex with the name entered by the user
     for (Vortex& vortex : vortexList) {
         if (vortex.name == vortexName) {
@@ -563,14 +570,13 @@ void addActivity() {
         std::cout << "Invalid place" << std::endl;
         return;
     }
-    
 
     std::cout << "Enter the name of the activity: ";
     std::getline(std::cin, activityName);
 
-    std::list<string>::iterator it = std::find(activityList.begin(), activityList.end(), activityName); //This search the activity in the list and give the pointer
-    
-    //If the acivity is in the list, it will add it to the vortex
+    std::list<string>::iterator it = std::find(activityList.begin(), activityList.end(), activityName); // This search the activity in the list and give the pointer
+
+    // If the acivity is in the list, it will add it to the vortex
     if (it != activityList.end()) {
 
         // Check if the activity is already in the vortex
@@ -581,16 +587,16 @@ void addActivity() {
             }
         }
 
-        // Add the activity to the vortex 
+        // Add the activity to the vortex
         vortexToAdd->activities.push_back(&(*it));
         return;
     }
-    
+
     std::cout << "Activity not found" << std::endl;
 }
 
 void removeActivity() {
-    // This function removes an activity from a vortex 
+    // This function removes an activity from a vortex
     // Receive: nothing
     // Return: nothing
 
@@ -601,7 +607,8 @@ void removeActivity() {
 
     string activityName;
 
-    std::cout << "Removing an activity from a place \n" << std::endl;
+    std::cout << "Removing an activity from a place \n"
+              << std::endl;
 
     std::cout << "Enter the name of the place: ";
     std::getline(std::cin, vortexName);
@@ -614,7 +621,7 @@ void removeActivity() {
         }
     }
 
-    // If the vortex was not found, print an error message and return 
+    // If the vortex was not found, print an error message and return
     if (vortexToRemove == nullptr) {
         std::cout << "Invalid place" << std::endl;
         return;
@@ -631,16 +638,16 @@ void removeActivity() {
             return;
         }
     }
-    
+
     std::cout << "Activity not found" << std::endl;
 }
 
 void modifyVortexActivities() {
-    // This function modifies the activities of a vortex 
+    // This function modifies the activities of a vortex
     // Receive: nothing
     // Return: nothing
-    
-    bool exit = false; 
+
+    bool exit = false;
     system("clear");
 
     while (!exit) {
@@ -648,8 +655,8 @@ void modifyVortexActivities() {
         createMenu(options);
         int option;
         try {
-        std::cin >> option;
-        std::cin.ignore();
+            std::cin >> option;
+            std::cin.ignore();
         } catch (const std::invalid_argument& e) {
             std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
             return;
@@ -672,9 +679,7 @@ void modifyVortexActivities() {
             std::cout << "Invalid option" << std::endl;
             break;
         }
-
     }
-
 }
 
 void modifyVortex() {
@@ -692,8 +697,8 @@ void modifyVortex() {
         std::vector<string> options = {"Modify name", "Modify activities"};
         createMenu(options);
         try {
-        std::cin >> option;
-        std::cin.ignore();
+            std::cin >> option;
+            std::cin.ignore();
         } catch (const std::invalid_argument& e) {
             std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
             return;
@@ -732,7 +737,7 @@ void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>&
     // If the origin vortex is the same as the target vortex, add the path to the list of paths
     if (&originVortex == &targetVortex) {
         allPaths.push_back(path);
-        distances.push_back(currentDistance);  
+        distances.push_back(currentDistance);
     }
 
     // Find the paths between the origin vortex and the target vortex by visiting all the edges of the origin vortex
@@ -747,7 +752,7 @@ void findPaths(Vortex& originVortex, Vortex& targetVortex, std::vector<Vortex*>&
 
 void findShortestPath(string originVortexName, string targetVortexName) {
     // This function finds the shortest path between two vortexes by using the findPaths function
-    // Receive: two strings (the names of the vortexes) 
+    // Receive: two strings (the names of the vortexes)
     // Return: nothing
 
     Vortex* originVortex = nullptr;
@@ -756,7 +761,7 @@ void findShortestPath(string originVortexName, string targetVortexName) {
     std::vector<Vortex*> path;
     std::vector<std::vector<Vortex*>> allPaths;
     std::vector<float> distances;
-    
+
     // Find the vortexes with the names entered by the user
     for (Vortex& vortex : vortexList) {
         if (vortex.name == originVortexName) {
@@ -769,7 +774,7 @@ void findShortestPath(string originVortexName, string targetVortexName) {
 
     // Call to findPaths function
     findPaths(*originVortex, *targetVortex, path, allPaths, distances, 0);
-    
+
     // If there are no paths between the vortexes, print an error message and return
     if (allPaths.empty()) {
         std::cout << "There is no path between " << originVortexName << " and " << targetVortexName << std::endl;
@@ -790,13 +795,12 @@ void findShortestPath(string originVortexName, string targetVortexName) {
                 std::cout << " -> ";
             }
         }
-        
+
         std::cout << ". The distance is: " << distances[minIndex] << std::endl;
 
     } else {
         std::cout << "No minimum distance found." << std::endl;
     }
-
 }
 
 void amplitud() {
@@ -804,7 +808,7 @@ void amplitud() {
     // Receive: nothing
     // Return: nothing
     // (For the sake of clarity, it is called 'amplitud' and not 'Breadth-First Search')
-    
+
     system("clear");
     std::cout << "Amplitud (BFS) traversal: " << std::endl;
 
@@ -818,9 +822,9 @@ void amplitud() {
 }
 
 void profundidad(Vortex* originVortex) {
-    // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph 
-    // Receive: a pointer to a vortex 
-    // Return: nothing 
+    // This function does a Depth-First Search (DFS) traversal of the vertices in the Graph
+    // Receive: a pointer to a vortex
+    // Return: nothing
     // (For the sake of clarity, it is called 'profundidad' and not 'Depth-First Search')
 
     if (originVortex->visited) {
@@ -843,11 +847,11 @@ void profundidad(Vortex* originVortex) {
     }
 }
 
-void printTree(Tree *root) {
+void printTree(Tree* root) {
     if (root == nullptr) {
         return;
     }
-    for (Tree *child : root->children) {
+    for (Tree* child : root->children) {
         std::cout << child->clasification << std::endl;
     }
     /* for (Tree *child : root->children) { */
@@ -866,7 +870,7 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
         std::cout << "Case1 " << std::endl;
         std::cout << root->checkRepeteatedClasification(person.gender) << std::endl;
         std::cout << person.gender;
-        for (Tree *child : root->children) {
+        for (Tree* child : root->children) {
             std::cout << child->clasification << std::endl;
         }
         if (root->checkRepeteatedClasification(person.gender)) {
@@ -874,7 +878,7 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
             sortingChoices.erase(sortingChoices.begin());
             return;
         }
-        Tree *newNode = new Tree();
+        Tree* newNode = new Tree();
         newNode->clasification = person.gender;
         root->addChild(newNode);
         sortingChoices.erase(sortingChoices.begin());
@@ -885,7 +889,7 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
         std::cout << "Case2 " << std::endl;
         std::cout << root->checkRepeteatedClasification(std::to_string(person.age)) << std::endl;
         std::cout << person.age;
-        for (Tree *child : root->children) {
+        for (Tree* child : root->children) {
             std::cout << child->clasification << std::endl;
         }
         if (root->checkRepeteatedClasification(std::to_string(person.age))) {
@@ -893,19 +897,18 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
             sortingChoices.erase(sortingChoices.begin());
             return;
         }
-        Tree *newNode = new Tree();
+        Tree* newNode = new Tree();
         newNode->clasification = person.age;
         root->addChild(newNode);
         sortingChoices.erase(sortingChoices.begin());
         buildNodeForThisPerson(person, sortingChoices, newNode);
         return;
-
     }
     if (sortingChoices[0] == 3) {
         std::cout << "Case3 " << std::endl;
         std::cout << root->checkRepeteatedClasification(person.beginingRute) << std::endl;
         std::cout << person.beginingRute;
-        for (Tree *child : root->children) {
+        for (Tree* child : root->children) {
             std::cout << child->clasification << std::endl;
         }
         if (root->checkRepeteatedClasification(person.beginingRute)) {
@@ -913,7 +916,7 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
             sortingChoices.erase(sortingChoices.begin());
             return;
         }
-        Tree *newNode = new Tree();
+        Tree* newNode = new Tree();
         newNode->clasification = person.beginingRute;
         root->addChild(newNode);
         sortingChoices.erase(sortingChoices.begin());
@@ -924,7 +927,7 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
         std::cout << "Case4 " << std::endl;
         std::cout << root->checkRepeteatedClasification(person.activity) << std::endl;
         std::cout << person.activity;
-        for (Tree *child : root->children) {
+        for (Tree* child : root->children) {
             std::cout << child->clasification << std::endl;
         }
         if (root->checkRepeteatedClasification(person.activity)) {
@@ -932,15 +935,22 @@ void buildNodeForThisPerson(Person person, std::vector<int> sortingChoices, Tree
             sortingChoices.erase(sortingChoices.begin());
             return;
         }
-        Tree *newNode = new Tree();
+        Tree* newNode = new Tree();
         newNode->clasification = person.activity;
         root->addChild(newNode);
         sortingChoices.erase(sortingChoices.begin());
         buildNodeForThisPerson(person, sortingChoices, newNode);
         return;
     }
-
 }
+
+void registerUser() {
+    // This function registers a user
+    Person person = Person();
+    std::cout << "Type your gender: ";
+}
+
+
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -953,44 +963,45 @@ void setPeople(string fileName) {
 }
 
 void appendGlobalActivity() {
-    // This function appends an activity to the global list of activities 
-    // Receive: nothing 
-    // Return: nothing 
-    
+    // This function appends an activity to the global list of activities
+    // Receive: nothing
+    // Return: nothing
+
     system("clear");
-    std::cout << "Appending an activity to the global list of activities \n" << std::endl;
+    std::cout << "Appending an activity to the global list of activities \n"
+              << std::endl;
 
     string activityName;
 
     std::cout << "Enter the name of the activity: ";
     std::getline(std::cin, activityName);
 
-    // Check if the activity is already in the list 
+    // Check if the activity is already in the list
     for (string activity : activityList) {
         if (activity == activityName) {
             std::cout << "This activity is already in the list" << std::endl;
             return;
         }
-    } 
+    }
 
-    // Add the activity to the list 
+    // Add the activity to the list
     activityList.push_back(activityName);
-
 }
 
 void deleteGlobalActivity() {
-    // This function deletes an activity from the global list of activities 
-    // Receive: nothing 
-    // Return: nothing 
+    // This function deletes an activity from the global list of activities
+    // Receive: nothing
+    // Return: nothing
     system("clear");
-    std::cout << "Deleting an activity from the global list of activities \n" << std::endl;
+    std::cout << "Deleting an activity from the global list of activities \n"
+              << std::endl;
 
     string activityName;
 
     std::cout << "Enter the name of the activity: ";
     std::getline(std::cin, activityName);
 
-    // Check if the activity is in the list and if it is, delete it 
+    // Check if the activity is in the list and if it is, delete it
     for (string activity : activityList) {
         if (activity == activityName) {
             activityList.remove(activity);
@@ -1003,8 +1014,8 @@ void deleteGlobalActivity() {
 }
 
 void setGraph() {
-    // This function creates the graph 
-    // Receive: nothing 
+    // This function creates the graph
+    // Receive: nothing
     // Return: nothing
 
     Vortex moncho("San Ramon");
@@ -1029,37 +1040,36 @@ void setGraph() {
     vortexList.push_back(liberia);
     vortexList.push_back(puntarenas);
 
-    setTrunkEdge("Liberia", "Puntarenas", 136); //1
-    setTrunkEdge("Liberia", "Fortuna", 135); //2
-    setTrunkEdge("Liberia", "San Ramon", 162); //3
-    setTrunkEdge("San Ramon", "Fortuna", 71); //4
-    setTrunkEdge("San Ramon", "Puntarenas", 54); //5
-    setTrunkEdge("San Ramon", "Palmares", 8); //6
-    setTrunkEdge("San Ramon", "Naranjo", 22); //7 
-    setTrunkEdge("San Ramon", "Ciudad Quesada", 37); //8
-    setTrunkEdge("Palmares", "Puntarenas", 59); //9
-    setTrunkEdge("Palmares", "Naranjo", 19); //10
-    setTrunkEdge("Palmares", "Grecia", 27); //11
-    setTrunkEdge("Palmares", "Alajuela", 40); //12 
-    setTrunkEdge("Fortuna", "Ciudad Quesada", 45); //13
-    setTrunkEdge("Ciudad Quesada", "Naranjo", 40); //14
-    setTrunkEdge("Ciudad Quesada", "Poas", 80); //15 
-    setTrunkEdge("Naranjo", "Grecia", 16); //16
-    setTrunkEdge("Naranjo", "Poas", 27); //17
-    setTrunkEdge("Grecia", "Poas", 15); //18
-    setTrunkEdge("Grecia", "Alajuela", 20); //19
-    setTrunkEdge("Poas", "Alajuela", 18); //20
-
- 
+    setTrunkEdge("Liberia", "Puntarenas", 136);      // 1
+    setTrunkEdge("Liberia", "Fortuna", 135);         // 2
+    setTrunkEdge("Liberia", "San Ramon", 162);       // 3
+    setTrunkEdge("San Ramon", "Fortuna", 71);        // 4
+    setTrunkEdge("San Ramon", "Puntarenas", 54);     // 5
+    setTrunkEdge("San Ramon", "Palmares", 8);        // 6
+    setTrunkEdge("San Ramon", "Naranjo", 22);        // 7
+    setTrunkEdge("San Ramon", "Ciudad Quesada", 37); // 8
+    setTrunkEdge("Palmares", "Puntarenas", 59);      // 9
+    setTrunkEdge("Palmares", "Naranjo", 19);         // 10
+    setTrunkEdge("Palmares", "Grecia", 27);          // 11
+    setTrunkEdge("Palmares", "Alajuela", 40);        // 12
+    setTrunkEdge("Fortuna", "Ciudad Quesada", 45);   // 13
+    setTrunkEdge("Ciudad Quesada", "Naranjo", 40);   // 14
+    setTrunkEdge("Ciudad Quesada", "Poas", 80);      // 15
+    setTrunkEdge("Naranjo", "Grecia", 16);           // 16
+    setTrunkEdge("Naranjo", "Poas", 27);             // 17
+    setTrunkEdge("Grecia", "Poas", 15);              // 18
+    setTrunkEdge("Grecia", "Alajuela", 20);          // 19
+    setTrunkEdge("Poas", "Alajuela", 18);            // 20
 }
 
 void calculateRoute() {
-    // This function calculates the shortest path between two vortexes if the activity is available in the destination 
+    // This function calculates the shortest path between two vortexes if the activity is available in the destination
     // Receive: nothing
     // Return: nothing
 
     system("clear");
-    std::cout << "Calculating the route \n" << std::endl;
+    std::cout << "Calculating the route \n"
+              << std::endl;
 
     string startPoint;
     string destination;
@@ -1070,7 +1080,6 @@ void calculateRoute() {
 
     bool activityInList = false;
     bool activityInDestination = false;
-
 
     std::cout << "Enter the starting point: ";
     std::getline(std::cin, startPoint);
@@ -1124,30 +1133,47 @@ void calculateRoute() {
         std::cout << "The destination doesn't have that activity, maybe you can look for another place" << std::endl;
         return;
     }
+    // ** CALL HERE FOR THE CREATION OF THE PERSON INFORMATION ** 
 
     // Call to findShortestPath function in order to find the shortest path between the vortexes
     findShortestPath(startPoint, destination);
-    
 }
 
 void vortexMenu() {
-    // This function prints the vortex menu 
+    // This function prints the vortex menu
     // Receive: nothing
     // Return: nothing
-    
+
     bool exit = false;
     system("clear");
     while (!exit) {
-    std::vector<string> options = {"Create Vortex", "Delete Vortex", "Modify Vortex"};
-    createMenu(options);
-    int option;
-    try {
-        std::cin >> option;
-        std::cin.ignore();
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
-        return;
-    }
+        std::vector<string> options = {"Create Vortex", "Delete Vortex", "Modify Vortex"};
+        createMenu(options);
+        int option;
+        try {
+            std::cin >> option;
+            std::cin.ignore();
+        } catch (const std::invalid_argument& e) {
+            std::cerr << "Invalid input for option. Please enter a valid numeric value." << std::endl;
+            return;
+        }
+        switch (option) {
+        case 1:
+            createVortex();
+            break;
+
+        case 2:
+            deleteVortex();
+            break;
+
+        case 3:
+            modifyVortex();
+            break;
+
+        case 0:
+            exit = true;
+            break;
+        }
     }
 }
 
@@ -1164,7 +1190,6 @@ void OrderTree(size_t sizeOfList) {
         std::cout << "Invalid option" << std::endl;
         return;
     }
-
 
     switch (option) {
     case 1:
@@ -1186,10 +1211,10 @@ void OrderTree(size_t sizeOfList) {
 }
 
 void activityMenu() {
-    // This function prints the activity menu 
-    // Receive: nothing 
-    // Return: nothing 
-    
+    // This function prints the activity menu
+    // Receive: nothing
+    // Return: nothing
+
     bool exit = false;
     system("clear");
     while (!exit) {
@@ -1271,9 +1296,9 @@ void printGraphMenu() {
 }
 
 void globalActivityMenu() {
-    // This function prints the global activity menu 
-    // Receive: nothing 
-    // Return: nothing 
+    // This function prints the global activity menu
+    // Receive: nothing
+    // Return: nothing
 
     bool exit = false;
     system("clear");
@@ -1320,7 +1345,7 @@ int main() {
     string dataFile = "Information/Data.bin";
     bool exit = false;
     setPeople(dataFile);
-    size_t size = load(&peopleList, "Information/Data.bin");
+    /* size_t size = load(&peopleList, "Information/Data.bin"); */
     while (!exit) {
         std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options"};
         createMenu(options);
@@ -1358,7 +1383,6 @@ int main() {
             std::cout << "Invalid option" << std::endl;
         }
     }
-
 
     return 0;
 }

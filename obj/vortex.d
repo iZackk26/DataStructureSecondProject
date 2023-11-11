@@ -130,13 +130,7 @@ obj/vortex.o: src/vortex.cpp /usr/include/stdc-predef.h include/Vortex.hh \
  /usr/include/c++/13.2.1/bits/stl_list.h \
  /usr/include/c++/13.2.1/bits/allocated_ptr.h \
  /usr/include/c++/13.2.1/ext/aligned_buffer.h \
- /usr/include/c++/13.2.1/bits/list.tcc include/Edge.hh \
- /usr/include/c++/13.2.1/algorithm \
- /usr/include/c++/13.2.1/bits/stl_algo.h \
- /usr/include/c++/13.2.1/bits/algorithmfwd.h \
- /usr/include/c++/13.2.1/bits/stl_heap.h \
- /usr/include/c++/13.2.1/bits/uniform_int_dist.h \
- /usr/include/c++/13.2.1/bits/stl_tempbuf.h
+ /usr/include/c++/13.2.1/bits/list.tcc include/Edge.hh
 /usr/include/stdc-predef.h:
 include/Vortex.hh:
 /usr/include/c++/13.2.1/iostream:
@@ -320,9 +314,3 @@ include/Vortex.hh:
 /usr/include/c++/13.2.1/ext/aligned_buffer.h:
 /usr/include/c++/13.2.1/bits/list.tcc:
 include/Edge.hh:
-/usr/include/c++/13.2.1/algorithm:
-/usr/include/c++/13.2.1/bits/stl_algo.h:
-/usr/include/c++/13.2.1/bits/algorithmfwd.h:
-/usr/include/c++/13.2.1/bits/stl_heap.h:
-/usr/include/c++/13.2.1/bits/uniform_int_dist.h:
-/usr/include/c++/13.2.1/bits/stl_tempbuf.h:
