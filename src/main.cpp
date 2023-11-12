@@ -1498,6 +1498,17 @@ void printGraphMenu() {
     }
 }
 
+void printGlobalActivity() {
+    // This function prints the global activity list
+    // Receive: nothing
+    // Returns: nothing
+
+    std::cout << "Global activity list: " << std::endl;
+    for (string activity : activityList) {
+        std::cout << activity << std::endl;
+    }
+}
+
 void globalActivityMenu() {
     // This function prints the global activity menu
     // Receive: nothing
@@ -1531,17 +1542,13 @@ void globalActivityMenu() {
             deleteGlobalActivity();
             break;
         case 3:
-            std::cout << "Global activity list: " << std::endl;
-            for (string activity : activityList) {
-                std::cout << activity << std::endl;
-            }
+            printGlobalActivity();          
             break;
         default:
             std::cout << "Invalid option" << std::endl;
             break;
         }
     }
-    return;
 }
 
 int main() {
@@ -1577,6 +1584,7 @@ int main() {
             break;
         case 6:
             globalActivityMenu();
+            break;
         case 7:
             treeMenu();
             break;
