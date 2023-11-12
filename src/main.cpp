@@ -20,22 +20,24 @@ Person* peopleList = nullptr;
 // This function opens a file and append information to it in binary mode
 // Receives: a person object and the file name
 // Returns: nothing
-void writeToFile(Person* person, string fileName, size_t size) {
-
+void writeToFile(Person* person, const string& fileName, size_t size) {
     std::ofstream file(fileName, std::ios::out | std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("File not found");
     }
     // write the size of the person class
     file.write(reinterpret_cast<const char*>(&size), sizeof(size_t));
-    file.write(reinterpret_cast<const char*>(person), sizeof(Person) * size);
+    for (size_t i = 0; i < size; i++) {
+        file.write(reinterpret_cast<const char*>(&person[i]), sizeof(Person));
+
+    }
+    //file.write(reinterpret_cast<const char*>(person), sizeof(Person) * size);
     file.close();
 
     if (!file.good()) {
         throw std::runtime_error("Error occurred at writing time");
     }
 }
-
 size_t load(Person** person, string filename) {
     std::ifstream file(filename, std::ios::in | std::ios::binary);
     if (!file.is_open()) {
@@ -847,14 +849,20 @@ void profundidad(Vortex* originVortex) {
     }
 }
 
-void printTree(Tree* root, int level) {
+void printTreeDepth(Tree* root, int depth) {
     if (root == nullptr) {
         return;
     }
-    std::cout << "Nivel: " << level << std::endl;
-    std::cout << root->clasification << std::endl;
+
+    // Print the current node with its depth
+    for (int i = 0; i < depth; ++i) {
+        std::cout << "  ";  // Adjust the spacing for better visualization
+    }
+    std::cout << "|-- " << root->clasification << std::endl;
+
+    // Recursively print children
     for (Tree* child : root->children) {
-        printTree(child, level + 1);
+        printTreeDepth(child, depth + 1);
     }
 }
 
@@ -863,66 +871,89 @@ void printTree(Tree* root, int level) {
 // Return: nothing
 //
 enum Option {
-
     GENDER = 1,
     AGE = 2,
     PLACE_OF_RESIDENCE = 3,
     ACTIVITY = 4
 };
 
-void buildNodeForThisPerson(Person* person, std::vector<Option> sortingChoices, Tree* root) {
-    if (sortingChoices.empty() || root == nullptr) {
+void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root) {
+    if (choices.empty() || root == nullptr) {
         return;
-    } else if (sortingChoices[0] == GENDER) {
+    }
+    Option choice = choices[0];
+    // Identify the feature based on the choice
+    string feature;
+    switch (choice) {
+        case GENDER:
+            feature = person->gender;
+            break;
+        case AGE:
+            feature = std::to_string(person->age);
+            break;
+        case PLACE_OF_RESIDENCE:
+            feature = person->endRute;
+            break;
+        case ACTIVITY:
+            feature = person->activity;
+            break;
+        default:
+            // Handle invalid choice
+            return;
+    }
+    Tree* child = root->addChildIfNotExist(feature);
+    // Recursively call for the next feature in the order
+    createDecisionTree(std::vector<Option>(choices.begin() + 1, choices.end()), person, child);
+}
 
-        for (Tree* child : root->children) {
-            std::cout << "Child de for: " << child->clasification << std::endl;
-            if (child->clasification == person->gender) {
-                std::cout << "Repetido dentro del if" << std::endl;
-                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
-                return;
-            }
+void setOrder(size_t size) {
+    std::vector<string> options = {"Gender", "Age", "Place of Residence", "Activity"};
+    std::vector<Option> order;
+    createMenu(options);
+    int option;
+    for (size_t i = 0; i < options.size(); i++) {
+        std::cin >> option;
+        std::cin.ignore();
+        if (option > 4 || option < 0) {
+            std::cout << "Invalid option" << std::endl;
+            i--;
+            continue;
         }
-        std::cout << "No repetido dentro del if" << std::endl;
-        Tree* node = new Tree(person->gender);
-        root->children.push_back(node);
-        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
-
-    
-    } else if (sortingChoices[0] == AGE) {
-        for (Tree* child : root->children) {
-            if (child->clasification == std::to_string(person->age)) {
-                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
-                return;
-            }
-        }
-        Tree* node = new Tree(std::to_string(person->age));
-        root->children.push_back(node);
-        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
-
-    } else if (sortingChoices[0] == PLACE_OF_RESIDENCE) {
-        for (Tree* child : root->children) {
-            if (child->clasification == person->beginingRoute) {
-                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
-                return;
-            }
-        }
-        Tree* node = new Tree(person->beginingRoute);
-        root->children.push_back(node);
-        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
-
-    } else if (sortingChoices[0] == ACTIVITY) {
-        for (Tree* child : root->children) {
-            if (child->clasification == person->activity) {
-                buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), child);
-                return;
-            }
-        }
-        Tree* node = new Tree(person->activity);
-        root->children.push_back(node);
-        buildNodeForThisPerson(person, std::vector<Option>(sortingChoices.begin() + 1, sortingChoices.end()), node);
+        order.push_back((Option)option);
+    }
+    for (size_t i = 0; i < size; i++) {
+        createDecisionTree(order, &peopleList[i], peopleTree);
     }
 }
+
+void treeMenu() {
+    std::vector<string> options = {"Sort Tree", "Print Tree"};
+    size_t size = load(&peopleList, "Information/Data.bin");
+    createMenu(options);
+    int option;
+    std::cin >> option;
+    std::cin.ignore();
+    if (option > 2 || option < 0) {
+        std::cout << "Invalid option" << std::endl;
+        return;
+    }
+    switch (option) {
+        case 0:
+            break;
+        case 1:
+            setOrder(size);
+            break;
+        case 2:
+            std::cout << "====Printing Tree====" << std::endl;
+            printTreeDepth(peopleTree, 0);
+            std::cout << "=====================" << std::endl;
+            break;
+        default:
+            std::cout << "Invalid option" << std::endl;
+            break;
+    }
+}
+
 
 void registerUser() {
     // This function registers a user
@@ -930,15 +961,52 @@ void registerUser() {
     std::cout << "Type your gender: ";
 }
 
+/* void setPeople(string fileName) { */
+/*     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer"); */
+/*     Person p2("Female", 19, "Heredia", "Alajuela", "Comer"); */
+/*     Person p3("Male", 20, "Palmares", "San Ramon", "Comer"); */
+/*     Person p4("Male", 22, "Chachagua", "Alajuela", "Comer"); */
+/*     Person p5("Female", 24, "San Jose", "San Ramon", "Comer"); */
+/*     Person list[5] = {p1, p2, p3, p4, p5}; */
+/*     writeToFile(list, fileName, 5); */
+/* } */
+
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
-    Person p2("Female", 19, "Heredia", "Alajuela", "Comer");
+    Person p2("Female", 18, "Heredia", "Alajuela", "Comer");
     Person p3("Male", 20, "Palmares", "San Ramon", "Comer");
-    Person p4("Male", 22, "Chachagua", "Alajuela", "Comer");
+    Person p4("Male", 20, "Chachagua", "Alajuela", "Comer");
     Person p5("Female", 24, "San Jose", "San Ramon", "Comer");
-    Person list[5] = {p1, p2, p3, p4, p5};
-    writeToFile(list, fileName, 5);
+    Person p6("Female", 24, "Ciudad Quesada", "San Ramon", "Comer");
+    Person p7("Male", 23, "Grecia", "Palmares", "Comer");
+    Person p8("Male", 23, "Naranjo", "Alajuela", "Comer");
+    Person p9("Female", 27, "San Ramon", "Heredia", "Comer");
+    Person p10("Male", 27, "Liberia", "Puntarenas", "Comer");
+    Person p11("Female", 32, "Palmares", "Naranjo", "Comer");
+    Person p12("Male", 32, "San Jose", "Ciudad Quesada", "Comer");
+    Person p13("Female", 18, "Ciudad Quesada", "Fortuna", "Comer");
+    Person p14("Male", 22, "Liberia", "Alajuela", "Comer");
+    Person p15("Female", 22, "Grecia", "San Ramon", "Comer");
+    Person p16("Male", 30, "Fortuna", "Grecia", "Comer");
+    Person p17("Male", 30, "Naranjo", "Palmares", "Comer");
+    Person p18("Female", 20, "Ciudad Quesada", "Grecia", "Comer");
+    Person p19("Male", 23, "San Ramon", "Alajuela", "Comer");
+    Person p20("Female", 26, "Heredia", "San Jose", "Comer");
+    Person p21("Male", 27, "Palmares", "Ciudad Quesada", "Comer");
+    Person p22("Female", 29, "Naranjo", "Liberia", "Comer");
+    Person p23("Male", 35, "San Jose", "Heredia", "Comer");
+    Person p24("Male", 35, "Grecia", "Palmares", "Comer");
+    Person p25("Female", 18, "Ciudad Quesada", "Liberia", "Comer");
+    Person p26("Male", 22, "Naranjo", "Fortuna", "Comer");
+    Person p27("Female", 35, "Palmares", "San Jose", "Comer");
+    Person p28("Male", 26, "Ciudad Quesada", "Grecia", "Comer");
+    Person p29("Male", 30, "San Ramon", "Naranjo", "Comer");
+    Person p30("Female", 30, "Grecia", "Liberia", "Comer");
+
+    Person list[30] = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30};
+    writeToFile(list, fileName, 30);
 }
+
 
 void appendGlobalActivity() {
     // This function appends an activity to the global list of activities
@@ -1155,58 +1223,7 @@ void vortexMenu() {
     }
 }
 
-void setOptions() {
-    std::vector<string> sortingOption = {"Gender", "Age", "Place of residence", "Activity"};
-    std::vector<Option> sortingChoices;
-    size_t size = load(&peopleList, "Information/Data.bin");
-    createMenu(sortingOption);
-    for (size_t i = 0; i < sortingOption.size(); i++) {
-        int choice;
-        std::cin >> choice;
-        std::cin.ignore();
-        if (choice < 0 || choice > static_cast<int>(sortingOption.size())) {
-            std::cout << "Invalid option" << std::endl;
-            return;
-        }
-        /* sortingChoices.push_back(&choice); */
-        sortingChoices.push_back((Option)choice);
-    }
 
-    for (size_t i = 0; i < size; i++) {
-        buildNodeForThisPerson(&peopleList[i], sortingChoices, peopleTree);
-    }
-}
-
-void orderTree() {
-
-    std::vector<string> options = {"Order Tree", "Print Tree"};
-    std::vector<int> sortingChoices;
-    createMenu(options);
-    int option;
-    std::cin >> option;
-    std::cin.ignore();
-    if (option < 0 || option > static_cast<int>(options.size())) {
-        std::cout << "Invalid option" << std::endl;
-        return;
-    }
-    switch (option) {
-    case 1:
-        setOptions();
-        break;
-    case 2:
-        printTree(peopleTree, 1);
-        break;
-    case 3:
-        std::cout << "JUE" << std::endl;
-        break;
-    case 0:
-        /* exit = true; */
-        break;
-    default:
-        std::cout << "Invalid option" << std::endl;
-        break;
-    }
-}
 
 void activityMenu() {
     // This function prints the activity menu
@@ -1372,8 +1389,7 @@ int main() {
         case 6:
             globalActivityMenu();
         case 7:
-            /* orderTree(size); */
-            orderTree();
+            treeMenu();
             // Calculate Route
             break;
         case 0:

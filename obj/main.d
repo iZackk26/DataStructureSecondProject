@@ -1,5 +1,5 @@
 obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Tree.hh \
- /usr/include/c++/13.2.1/iostream \
+ include/Person.hh /usr/include/c++/13.2.1/iostream \
  /usr/include/c++/13.2.1/bits/requires_hosted.h \
  /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++config.h \
  /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/os_defines.h \
@@ -126,8 +126,8 @@ obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Tree.hh \
  /usr/include/c++/13.2.1/bits/locale_facets.tcc \
  /usr/include/c++/13.2.1/bits/basic_ios.tcc \
  /usr/include/c++/13.2.1/bits/ostream.tcc /usr/include/c++/13.2.1/istream \
- /usr/include/c++/13.2.1/bits/istream.tcc include/Person.hh \
- /usr/include/c++/13.2.1/list /usr/include/c++/13.2.1/bits/stl_list.h \
+ /usr/include/c++/13.2.1/bits/istream.tcc /usr/include/c++/13.2.1/list \
+ /usr/include/c++/13.2.1/bits/stl_list.h \
  /usr/include/c++/13.2.1/bits/allocated_ptr.h \
  /usr/include/c++/13.2.1/ext/aligned_buffer.h \
  /usr/include/c++/13.2.1/bits/list.tcc include/Edge.hh include/Vortex.hh \
@@ -152,6 +152,7 @@ obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Tree.hh \
  /usr/include/c++/13.2.1/bits/vector.tcc
 /usr/include/stdc-predef.h:
 include/Tree.hh:
+include/Person.hh:
 /usr/include/c++/13.2.1/iostream:
 /usr/include/c++/13.2.1/bits/requires_hosted.h:
 /usr/include/c++/13.2.1/x86_64-pc-linux-gnu/bits/c++config.h:
@@ -327,7 +328,6 @@ include/Tree.hh:
 /usr/include/c++/13.2.1/bits/ostream.tcc:
 /usr/include/c++/13.2.1/istream:
 /usr/include/c++/13.2.1/bits/istream.tcc:
-include/Person.hh:
 /usr/include/c++/13.2.1/list:
 /usr/include/c++/13.2.1/bits/stl_list.h:
 /usr/include/c++/13.2.1/bits/allocated_ptr.h:
