@@ -1073,6 +1073,10 @@ void printPeopleInformation() {
 }
 
 void treeMenu() {
+    //This function displays the tree tree menu 
+    //Receive: nothing
+    //Return: nothing
+
     std::vector<string> options = {"Sort Tree", "Print Tree", "Print People Information"};
     load(&peopleList, "Information/Data.bin");
     createMenu(options);
@@ -1103,7 +1107,7 @@ void treeMenu() {
     }
 }
 
-void registerUser() {
+void registerUser(string& startPoint, string& destination, string& activity) {
     // This function is called due to a petition to search the best route for a person
     // It will ask for the information of the person and will save it in a file
     // Receive: nothing
@@ -1111,14 +1115,13 @@ void registerUser() {
     bool error = false;
     char gender[10];
     int age;
-    char beginingRoute[30];
-    char endRute[30];
-    char activity[20];
-    std::cout << "Registering a new user \n"
-              << std::endl;
+    std::cout << "Registering a new user \n" << std::endl;
     std::cout << "Type your gender: Male/Female";
-    std::cin >> gender;
+    std::cin >> gender; 
 
+    const char* beginingRoute = startPoint.c_str();
+    const char* endRute = destination.c_str();
+    const char* activityToAdd = activity.c_str();
     while (!error) {
         try {
             std::cout << "Type your age: ";
@@ -1133,17 +1136,15 @@ void registerUser() {
         }
     }
 
-    std::cout << "Type your place of residence: ";
-    std::cin >> beginingRoute;
-    std::cout << "Type your destination: ";
-    std::cin >> endRute;
-    std::cout << "Type your activity: ";
-    std::cin >> activity;
-    Person newPerson(gender, age, beginingRoute, endRute, activity);
+    Person newPerson(gender, age, beginingRoute, endRute, activityToAdd);
     addPerson(newPerson, "Information/Data.bin");
 }
 
 void setPeople(string fileName) {
+    // This function creates the people that will be used to test the program 
+    // Receive: nothing 
+    // Return: nothing
+
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
     Person p2("Female", 18, "Heredia", "Alajuela", "Comer");
     Person p3("Male", 20, "Palmares", "San Ramon", "Comer");
@@ -1285,8 +1286,7 @@ void calculateRoute() {
     // Return: nothing
 
     system("clear");
-    std::cout << "Calculating the route \n"
-              << std::endl;
+    std::cout << "Calculating the route \n" << std::endl;
 
     string startPoint;
     string destination;
@@ -1351,7 +1351,7 @@ void calculateRoute() {
         return;
     }
     // ** CALL HERE FOR THE CREATION OF THE PERSON INFORMATION **
-    registerUser();
+    registerUser(startPoint, destination, activityToDo);
     // Call to findShortestPath function in order to find the shortest path between the vortexes
     findShortestPath(startPoint, destination);
 }
@@ -1433,6 +1433,25 @@ void activityMenu() {
     }
 }
 
+void searchProfundidad() {
+    // This function calls the function that does a Depth-First Search (DFS) traversal of the vertices in the Graph
+    // Receive: nothing
+    // Return: nothing
+
+    string startingPoint;
+    std::cout << "Enter the starting point: ";
+    std::getline(std::cin, startingPoint);
+
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == startingPoint) {
+            profundidad(&vortex);
+            return;
+        }
+    }
+
+    std::cout << "Invalid starting point" << std::endl;
+}
+
 void printGraphMenu() {
     // This function prints the graph menu
     // Receive: nothing
@@ -1463,7 +1482,7 @@ void printGraphMenu() {
             break;
         case 2:
             uncheckGraph();
-            profundidad(&vortexList.front());
+            searchProfundidad();
             uncheckGraph();
             break;
         case 3:
