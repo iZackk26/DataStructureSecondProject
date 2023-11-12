@@ -13,7 +13,7 @@ class Tree {
     int level;
 
     // List of people
-    std::list<int*> filePosition; // Lista de posiciones en el archivo
+    std::list<Person*> filePosition; // Lista de posiciones en el archivo
 
     // Constructor
     Tree(string clasification);

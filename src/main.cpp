@@ -1,13 +1,17 @@
-#include "Tree.hh"
 #include <Edge.hh>
+#include <InvalidInputException.hh>
 #include <Person.hh>
+#include <Tree.hh>
 #include <Vortex.hh>
 #include <algorithm>
 #include <cstddef>
 #include <fstream>
 #include <iostream>
+#include <iterator>
+#include <limits> // Limpiar el buffer de entrada
 #include <list>
 #include <set>
+#include <stdexcept>
 #include <string>
 #include <vector>
 
@@ -16,6 +20,21 @@ std::list<Vortex> vortexList;
 std::list<string> activityList;
 Tree* peopleTree = new Tree();
 Person* peopleList = nullptr;
+size_t currentPeopleSize = 0;
+
+int getIntegerInput() {
+    int result;
+    std::cin >> result;
+
+    if (std::cin.fail()) {
+        // La entrada no es un entero válido
+        std::cin.clear();                                                   // Limpiar el indicador de error
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Limpiar el buffer de entrada
+        throw InvalidInputException();
+    }
+
+    return result;
+}
 
 // This function opens a file and append information to it in binary mode
 // Receives: a person object and the file name
@@ -29,16 +48,15 @@ void writeToFile(Person* person, const string& fileName, size_t size) {
     file.write(reinterpret_cast<const char*>(&size), sizeof(size_t));
     for (size_t i = 0; i < size; i++) {
         file.write(reinterpret_cast<const char*>(&person[i]), sizeof(Person));
-
     }
-    //file.write(reinterpret_cast<const char*>(person), sizeof(Person) * size);
+    // file.write(reinterpret_cast<const char*>(person), sizeof(Person) * size);
     file.close();
 
     if (!file.good()) {
         throw std::runtime_error("Error occurred at writing time");
     }
 }
-size_t load(Person** person, string filename) {
+void load(Person** person, string filename) {
     std::ifstream file(filename, std::ios::in | std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("File not found");
@@ -49,7 +67,27 @@ size_t load(Person** person, string filename) {
     file.read(reinterpret_cast<char*>(p), sizeof(Person) * size);
     file.close();
     *person = p;
-    return size;
+    currentPeopleSize = size;
+}
+
+void addPerson(const Person& newPerson, const string& fileName) {
+    Person* existingPeople = nullptr;
+    load(&existingPeople, fileName);
+
+    size_t newSize = currentPeopleSize + 1;
+    Person* updatedPeople = new Person[newSize];
+
+    for (size_t i = 0; i < currentPeopleSize; ++i) {
+        updatedPeople[i] = existingPeople[i];
+    }
+
+    updatedPeople[currentPeopleSize] = newPerson;
+
+    writeToFile(updatedPeople, fileName, newSize);
+
+    // Liberar la memoria de las listas temporales
+    delete[] existingPeople;
+    delete[] updatedPeople;
 }
 
 void createMenu(const std::vector<string>& options) {
@@ -856,7 +894,7 @@ void printTreeDepth(Tree* root, int depth) {
 
     // Print the current node with its depth
     for (int i = 0; i < depth; ++i) {
-        std::cout << "  ";  // Adjust the spacing for better visualization
+        std::cout << "  "; // Adjust the spacing for better visualization
     }
     std::cout << "|-- " << root->clasification << std::endl;
 
@@ -885,28 +923,28 @@ void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root)
     // Identify the feature based on the choice
     string feature;
     switch (choice) {
-        case GENDER:
-            feature = person->gender;
-            break;
-        case AGE:
-            feature = std::to_string(person->age);
-            break;
-        case PLACE_OF_RESIDENCE:
-            feature = person->endRute;
-            break;
-        case ACTIVITY:
-            feature = person->activity;
-            break;
-        default:
-            // Handle invalid choice
-            return;
+    case GENDER:
+        feature = person->gender;
+        break;
+    case AGE:
+        feature = std::to_string(person->age);
+        break;
+    case PLACE_OF_RESIDENCE:
+        feature = person->endRute;
+        break;
+    case ACTIVITY:
+        feature = person->activity;
+        break;
+    default:
+        // Handle invalid choice
+        return;
     }
     Tree* child = root->addChildIfNotExist(feature);
     // Recursively call for the next feature in the order
     createDecisionTree(std::vector<Option>(choices.begin() + 1, choices.end()), person, child);
 }
 
-void setOrder(size_t size) {
+void setOrder() {
     std::vector<string> options = {"Gender", "Age", "Place of Residence", "Activity"};
     std::vector<Option> order;
     createMenu(options);
@@ -921,14 +959,23 @@ void setOrder(size_t size) {
         }
         order.push_back((Option)option);
     }
-    for (size_t i = 0; i < size; i++) {
+    for (size_t i = 0; i < currentPeopleSize; i++) {
         createDecisionTree(order, &peopleList[i], peopleTree);
     }
+    std::cout << "Tree successfully sorted" << std::endl;
+}
+
+void printPeopleInformation() {
+    load(&peopleList, "Information/Data.bin");
+    for (size_t i = 0; i < currentPeopleSize; i++) {
+        std::cout << peopleList[i] << std::endl;
+    }
+
 }
 
 void treeMenu() {
-    std::vector<string> options = {"Sort Tree", "Print Tree"};
-    size_t size = load(&peopleList, "Information/Data.bin");
+    std::vector<string> options = {"Sort Tree", "Print Tree", "Print People Information"};
+    load(&peopleList, "Information/Data.bin");
     createMenu(options);
     int option;
     std::cin >> option;
@@ -938,38 +985,61 @@ void treeMenu() {
         return;
     }
     switch (option) {
-        case 0:
-            break;
-        case 1:
-            setOrder(size);
-            break;
-        case 2:
-            std::cout << "====Printing Tree====" << std::endl;
-            printTreeDepth(peopleTree, 0);
-            std::cout << "=====================" << std::endl;
-            break;
-        default:
-            std::cout << "Invalid option" << std::endl;
-            break;
+    case 0:
+        break;
+    case 1:
+        setOrder();
+        break;
+    case 2:
+        std::cout << "====Printing Tree====" << std::endl;
+        printTreeDepth(peopleTree, 0);
+        std::cout << "=====================" << std::endl;
+        break;
+    default:
+        std::cout << "Invalid option" << std::endl;
+        break;
     }
 }
 
-
 void registerUser() {
-    // This function registers a user
-    /* Person person = Person(); */
-    std::cout << "Type your gender: ";
-}
+    // This function is called due to a petition to search the best route for a person
+    // It will ask for the information of the person and will save it in a file
+    // Receive: nothing
+    // Return: nothing
+    bool error = false;
+    char gender[10];
+    int age;
+    char beginingRoute[30];
+    char endRute[30];
+    char activity[20];
+    std::cout << "Registering a new user \n"
+              << std::endl;
+    std::cout << "Type your gender: Male/Female";
+    std::cin >> gender;
 
-/* void setPeople(string fileName) { */
-/*     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer"); */
-/*     Person p2("Female", 19, "Heredia", "Alajuela", "Comer"); */
-/*     Person p3("Male", 20, "Palmares", "San Ramon", "Comer"); */
-/*     Person p4("Male", 22, "Chachagua", "Alajuela", "Comer"); */
-/*     Person p5("Female", 24, "San Jose", "San Ramon", "Comer"); */
-/*     Person list[5] = {p1, p2, p3, p4, p5}; */
-/*     writeToFile(list, fileName, 5); */
-/* } */
+    while (!error) {
+        try {
+            std::cout << "Type your age: ";
+            age = getIntegerInput();
+            if (age < 0) {
+                std::cout << "Invalid age" << std::endl;
+            } else {
+                error = true;
+            }
+        } catch (const InvalidInputException& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+    }
+
+    std::cout << "Type your place of residence: ";
+    std::cin >> beginingRoute;
+    std::cout << "Type your destination: ";
+    std::cin >> endRute;
+    std::cout << "Type your activity: ";
+    std::cin >> activity;
+    Person newPerson(gender, age, beginingRoute, endRute, activity);
+    addPerson(newPerson, "Information/Data.bin");
+}
 
 void setPeople(string fileName) {
     Person p1("Male", 18, "San Ramon", "Santa Clara", "Comer");
@@ -1006,7 +1076,6 @@ void setPeople(string fileName) {
     Person list[30] = {p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30};
     writeToFile(list, fileName, 30);
 }
-
 
 void appendGlobalActivity() {
     // This function appends an activity to the global list of activities
@@ -1180,7 +1249,7 @@ void calculateRoute() {
         return;
     }
     // ** CALL HERE FOR THE CREATION OF THE PERSON INFORMATION **
-
+    registerUser();
     // Call to findShortestPath function in order to find the shortest path between the vortexes
     findShortestPath(startPoint, destination);
 }
@@ -1222,8 +1291,6 @@ void vortexMenu() {
         }
     }
 }
-
-
 
 void activityMenu() {
     // This function prints the activity menu
@@ -1333,6 +1400,9 @@ void globalActivityMenu() {
             return;
         }
         switch (option) {
+        case 0:
+            exit = true;
+            break;
         case 1:
             appendGlobalActivity();
             break;
@@ -1345,14 +1415,12 @@ void globalActivityMenu() {
                 std::cout << activity << std::endl;
             }
             break;
-        case 0:
-            exit = true;
-            break;
         default:
             std::cout << "Invalid option" << std::endl;
             break;
         }
     }
+    return;
 }
 
 int main() {
@@ -1361,7 +1429,7 @@ int main() {
     bool exit = false;
     setPeople(dataFile);
     while (!exit) {
-        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options", "Order Tree"};
+        std::vector<string> options = {"Calculate Route", "Print Graph", "Vortex Options", "Edge Options", "Activity Options", "Global Activity Options", "Order Tree and People Information"};
         createMenu(options);
         int option;
         std::cin >> option;
@@ -1390,7 +1458,6 @@ int main() {
             globalActivityMenu();
         case 7:
             treeMenu();
-            // Calculate Route
             break;
         case 0:
             exit = true;
@@ -1399,6 +1466,5 @@ int main() {
             std::cout << "Invalid option" << std::endl;
         }
     }
-
     return 0;
 }
