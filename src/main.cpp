@@ -422,6 +422,7 @@ void edgeMenu() {
     // This function prints the edge menu
     // Receive: nothing
     // Return: nothing
+
     system("clear");
     bool exit = false;
     while (!exit) {
@@ -888,6 +889,10 @@ void profundidad(Vortex* originVortex) {
 }
 
 void showStats(int totalPeople, int maleCount, int femaleCount, std::vector<Property> places, std::vector<Property> activities, std::vector<Property> ages) {
+    // This function shows the stats of the people 
+    // Receive: an integer, an integer, an integer, a vector of properties, a vector of properties and a vector of properties 
+    // Return: nothing 
+
     std::cout << "Show Stats menu" << std::endl;
     bool error = false;
     int total = totalPeople;
@@ -988,6 +993,10 @@ void showGlobalStats() {
 }
 
 void printTreeDepth(Tree* root, int depth) {
+    // This function prints the tree with a depth-first search 
+    // Receive: a pointer to a tree and an integer 
+    // Return: nothing 
+
     if (root == nullptr) {
         return;
     }
@@ -1016,6 +1025,10 @@ enum Option {
 };
 
 void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root) {
+    // This function creates a decision tree based on the choices 
+    // Receive: a vector of options, a pointer to a person and a pointer to a tree 
+    // Return: nothing 
+
     if (choices.empty() || root == nullptr) {
         return;
     }
@@ -1045,6 +1058,10 @@ void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root)
 }
 
 void setOrder() {
+    // This function sets the order of the tree
+    // Receive: nothing 
+    // Return: nothing 
+
     std::vector<string> options = {"Gender", "Age", "Place of Residence", "Activity"};
     std::vector<Option> order;
     createMenu(options);
@@ -1066,6 +1083,10 @@ void setOrder() {
 }
 
 void printPeopleInformation() {
+    // This function prints the information of the people 
+    // Receive: nothing 
+    // Return: nothing 
+
     load(&peopleList, "Information/Data.bin");
     for (size_t i = 0; i < currentPeopleSize; i++) {
         std::cout << peopleList[i] << std::endl;
@@ -1452,6 +1473,34 @@ void searchProfundidad() {
     std::cout << "Invalid starting point" << std::endl;
 }
 
+void printSpecificVortex() {
+    // This function prints the information of a specific vortex by asking the user for the name of the vortex
+    // Receive: nothing
+    // Return: nothing
+
+    string vortexName;
+    std::cout << "Enter the name of the vortex: ";
+    std::getline(std::cin, vortexName);
+
+    for (Vortex& vortex : vortexList) {
+        if (vortex.name == vortexName) {
+            std::cout << vortex << "\n" << "Edges: ";
+            for (Edge& edge : vortex.edges) {
+                std::cout << edge << " ";
+            }
+            std::cout << "\n" << "Activities: ";
+            for (string* activity : vortex.activities) {
+                std::cout << *activity << " ";
+            }
+            std::cout << std::endl;
+            return;
+            
+        }
+    }
+
+    std::cout << "Invalid vortex name" << std::endl;
+}
+
 void printGraphMenu() {
     // This function prints the graph menu
     // Receive: nothing
@@ -1460,7 +1509,7 @@ void printGraphMenu() {
     bool exit = false;
     system("clear");
     while (!exit) {
-        std::vector<string> options = {"Amplitud", "Profundidad", "Print Whole Graph"};
+        std::vector<string> options = {"Amplitud", "Profundidad", "Print Whole Graph", "Print Specific Vortex"};
         createMenu(options);
         int option;
         try {
@@ -1487,6 +1536,9 @@ void printGraphMenu() {
             break;
         case 3:
             printGraph();
+            break;
+        case 4:
+            printSpecificVortex();
             break;
         case 0:
             exit = true;
