@@ -9,12 +9,12 @@ using std::string;
 Tree::Tree(string clasification) {
     this->clasification = clasification;
     this->children = std::list<Tree*>();
-    this->filePosition = std::list<int*>();
+    this->filePosition = std::list<Person*>();
 }
 
 /* Constructor */
 Tree::Tree() {
     this->clasification = "";
     this->children = std::list<Tree*>();
-    this->filePosition = std::list<int*>();
+    this->filePosition = std::list<Person*>();
 }

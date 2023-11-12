@@ -131,7 +131,8 @@ obj/main.o: src/main.cpp /usr/include/stdc-predef.h include/Edge.hh \
  /usr/include/c++/13.2.1/bits/allocated_ptr.h \
  /usr/include/c++/13.2.1/ext/aligned_buffer.h \
  /usr/include/c++/13.2.1/bits/list.tcc include/InvalidInputException.hh \
- include/Person.hh include/Tree.hh /usr/include/c++/13.2.1/algorithm \
+ include/Person.hh include/Property.hh include/Tree.hh \
+ /usr/include/c++/13.2.1/algorithm \
  /usr/include/c++/13.2.1/bits/stl_algo.h \
  /usr/include/c++/13.2.1/bits/algorithmfwd.h \
  /usr/include/c++/13.2.1/bits/stl_heap.h \
@@ -338,6 +339,7 @@ include/Vortex.hh:
 /usr/include/c++/13.2.1/bits/list.tcc:
 include/InvalidInputException.hh:
 include/Person.hh:
+include/Property.hh:
 include/Tree.hh:
 /usr/include/c++/13.2.1/algorithm:
 /usr/include/c++/13.2.1/bits/stl_algo.h:

@@ -29,13 +29,15 @@ class Tree {
         return nullptr;
     }
     // add a child with the given clasification if it doesn't exist
-    Tree* addChildIfNotExist(const std::string& cls) {
+    Tree* addChildIfNotExist(const std::string& cls, Person& person) {
         Tree* child = findChild(cls);
         if (child != nullptr) {
+            child->filePosition.push_back(new Person(person));
             return child;
         }
         Tree* newChild = new Tree(cls);
         this->children.push_back(newChild);
+        newChild->filePosition.push_back(new Person(person));
         return newChild;
     }
 };

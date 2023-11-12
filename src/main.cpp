@@ -1,6 +1,7 @@
 #include <Edge.hh>
 #include <InvalidInputException.hh>
 #include <Person.hh>
+#include <Property.hh>
 #include <Tree.hh>
 #include <Vortex.hh>
 #include <algorithm>
@@ -385,7 +386,6 @@ void setTrunkEdge(const std::string& originVortexName, const std::string& destin
             break;
         }
     }
-
     // If the origin vortex was not found, print an error message and return
     if (originVortex == nullptr) {
         std::cout << "Invalid starting address" << std::endl;
@@ -887,6 +887,106 @@ void profundidad(Vortex* originVortex) {
     }
 }
 
+void showStats(int totalPeople, int maleCount, int femaleCount, std::vector<Property> places, std::vector<Property> activities, std::vector<Property> ages) {
+    std::cout << "Show Stats menu" << std::endl;
+    bool error = false;
+    int total = totalPeople;
+    std::vector<string> options = {"Total people", "Male Count", "Female Count", "Places", "Activities", "Ages"};
+    for (size_t i = 0; i < options.size(); i++) {
+        std::cout << i + 1 << ". " << options[i] << std::endl;
+    }
+    int option;
+    while (!error) {
+        try {
+            std::cout << "Type the number of the option you want to see: ";
+            option = getIntegerInput();
+            if (option < 0) {
+                std::cout << "Invalid input" << std::endl;
+            } else {
+                error = true;
+            }
+        } catch (const InvalidInputException& e) {
+            std::cerr << "Error: " << e.what() << std::endl;
+        }
+    }
+    switch (option) {
+    case 1:
+        break;
+    case 2:
+        break;
+    case 3:
+        break;
+    case 4:
+        break;
+    case 5:
+        break;
+    case 6:
+        break;
+    }
+}
+
+void showGlobalStats() {
+    int totalPeople = 0;
+    int maleCount = 0;
+    int femaleCount = 0;
+    std::vector<Property> places;
+    std::vector<Property> activities;
+    std::vector<Property> ages;
+
+    for (size_t i = 0; i < currentPeopleSize; i++) {
+        string gender = peopleList[i].gender;
+        int age = peopleList[i].age;
+        string place = peopleList[i].beginingRoute;
+        string activity = peopleList[i].activity;
+        if (gender == "Male") {
+            maleCount++;
+        } else {
+            femaleCount++;
+        }
+        if (places.empty()) {
+            Property property(place, 1, false);
+            places.push_back(property);
+        } else {
+            for (size_t i = 0; i < places.size(); i++) {
+                if (places[i].name == place) {
+                    places[i].addQuantity();
+                    break;
+                }
+            }
+            Property property(place, 1, false);
+            places.push_back(property);
+        }
+        if (activities.empty()) {
+            Property property(activity, 1, false);
+            activities.push_back(property);
+        } else {
+            for (size_t i = 0; i < activities.size(); i++) {
+                if (activities[i].name == activity) {
+                    activities[i].addQuantity();
+                    break;
+                }
+            }
+            Property property(activity, 1, false);
+            activities.push_back(property);
+        }
+        if (ages.empty()) {
+            Property property(std::to_string(age), 1, false);
+            ages.push_back(property);
+        } else {
+            for (size_t i = 0; i < ages.size(); i++) {
+                if (ages[i].name == std::to_string(age)) {
+                    ages[i].addQuantity();
+                    break;
+                }
+            }
+            Property property(std::to_string(age), 1, false);
+            ages.push_back(property);
+        }
+        totalPeople++;
+    }
+    showStats(totalPeople, maleCount, femaleCount, places, activities, ages);
+}
+
 void printTreeDepth(Tree* root, int depth) {
     if (root == nullptr) {
         return;
@@ -939,7 +1039,7 @@ void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root)
         // Handle invalid choice
         return;
     }
-    Tree* child = root->addChildIfNotExist(feature);
+    Tree* child = root->addChildIfNotExist(feature, *person);
     // Recursively call for the next feature in the order
     createDecisionTree(std::vector<Option>(choices.begin() + 1, choices.end()), person, child);
 }
@@ -970,7 +1070,6 @@ void printPeopleInformation() {
     for (size_t i = 0; i < currentPeopleSize; i++) {
         std::cout << peopleList[i] << std::endl;
     }
-
 }
 
 void treeMenu() {
@@ -980,7 +1079,7 @@ void treeMenu() {
     int option;
     std::cin >> option;
     std::cin.ignore();
-    if (option > 2 || option < 0) {
+    if (option > 3 || option < 0) {
         std::cout << "Invalid option" << std::endl;
         return;
     }
@@ -994,6 +1093,9 @@ void treeMenu() {
         std::cout << "====Printing Tree====" << std::endl;
         printTreeDepth(peopleTree, 0);
         std::cout << "=====================" << std::endl;
+        break;
+    case 3:
+        showGlobalStats();
         break;
     default:
         std::cout << "Invalid option" << std::endl;
