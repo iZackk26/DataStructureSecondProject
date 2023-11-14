@@ -15,3 +15,16 @@ Person::Person(const char* gender, int age, const char* beginingRoute, const cha
 
 Person::Person() {
 }
+
+string Person::getAgeRange() {
+    if (this->age >= 18 && this->age <= 30) {
+        return "18-30";
+    } else if (this->age >= 31 && age <= 64) {
+        return "31-64";
+    } else if (this->age > 64) {
+        return "65+";
+    } else {
+        return "1-17";
+    }
+
+}

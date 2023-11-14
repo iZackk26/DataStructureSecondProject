@@ -17,6 +17,8 @@ class Person{
         Person(const char* gender, int age, const char* beginingRute, const char* endRute, const char* activity);
         Person();
 
+        string getAgeRange();
+
         friend std::ostream& operator<<(std::ostream& os, const Person& p){
             os << p.gender << " " << p.age << " " << p.beginingRoute << " " << p.endRute << " " << p.activity;
             return os;

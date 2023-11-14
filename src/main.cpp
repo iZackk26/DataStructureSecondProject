@@ -24,6 +24,9 @@ Person* peopleList = nullptr;
 size_t currentPeopleSize = 0;
 
 int getIntegerInput() {
+    // This function gets an integer input from the user
+    // Receives: nothing
+    // Returns: an integer
     int result;
     std::cin >> result;
 
@@ -41,6 +44,9 @@ int getIntegerInput() {
 // Receives: a person object and the file name
 // Returns: nothing
 void writeToFile(Person* person, const string& fileName, size_t size) {
+    // This function writes the information of a person object to a file
+    // Receives: a person object and the file name
+    // Returns: nothing
     std::ofstream file(fileName, std::ios::out | std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("File not found");
@@ -58,6 +64,9 @@ void writeToFile(Person* person, const string& fileName, size_t size) {
     }
 }
 void load(Person** person, string filename) {
+    // This function loads the information from a file and stores it in a person object
+    // Receives: a pointer to a person object and the file name
+    // Returns: nothing
     std::ifstream file(filename, std::ios::in | std::ios::binary);
     if (!file.is_open()) {
         throw std::runtime_error("File not found");
@@ -72,6 +81,9 @@ void load(Person** person, string filename) {
 }
 
 void addPerson(const Person& newPerson, const string& fileName) {
+    // This function adds a person to the list of people
+    // Receive: a person object and the file name
+    // Return: nothing
     Person* existingPeople = nullptr;
     load(&existingPeople, fileName);
 
@@ -92,6 +104,9 @@ void addPerson(const Person& newPerson, const string& fileName) {
 }
 
 void createMenu(const std::vector<string>& options) {
+    // This function prints a menu
+    // Receive: a vector of strings
+    // Return: nothing
     int c = 1;
     for (const string& option : options) {
         std::cout << c << ". " << option << std::endl;
@@ -895,7 +910,7 @@ void showStats(int totalPeople, int maleCount, int femaleCount, std::vector<Prop
 
     std::cout << "Show Stats menu" << std::endl;
     bool error = false;
-    int total = totalPeople;
+    /* int total = totalPeople; */
     std::vector<string> options = {"Total people", "Male Count", "Female Count", "Places", "Activities", "Ages"};
     for (size_t i = 0; i < options.size(); i++) {
         std::cout << i + 1 << ". " << options[i] << std::endl;
@@ -931,6 +946,9 @@ void showStats(int totalPeople, int maleCount, int femaleCount, std::vector<Prop
 }
 
 void showGlobalStats() {
+    // This function shows the global stats of the people
+    // Receive: nothing
+    // Return: nothing
     int totalPeople = 0;
     int maleCount = 0;
     int femaleCount = 0;
@@ -1040,7 +1058,8 @@ void createDecisionTree(std::vector<Option> choices, Person* person, Tree* root)
         feature = person->gender;
         break;
     case AGE:
-        feature = std::to_string(person->age);
+        /* feature = std::to_string(person->age); */
+        feature = person->getAgeRange();
         break;
     case PLACE_OF_RESIDENCE:
         feature = person->endRute;
